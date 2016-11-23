@@ -1,0 +1,1 @@
+//jest.mock('react-css-modules', () => jest.fn());

@@ -1,0 +1,1 @@
+export const fullRedirect = (url) => window.location.href = url;

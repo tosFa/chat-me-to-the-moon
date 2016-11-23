@@ -1,0 +1,19 @@
+.nav {
+  composes: col-xs-6 from '../../../../styles/flexboxgrid.css';
+}
+.ul {
+  composes: row from '../../../../styles/flexboxgrid.css';
+  list-style-type: none;
+  justify-content: center;
+}
+
+.li {
+  padding: 1rem;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.icon {
+  color: #333;
+  margin-right: 0.3rem;
+}

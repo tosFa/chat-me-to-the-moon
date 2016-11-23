@@ -1,0 +1,40 @@
+html, body {
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding:0;
+}
+
+ul {
+  margin:0;
+  padding: 0;
+}
+
+a {
+  color: #333;
+  text-decoration: none;
+}
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
+  background: rgba(255, 255, 255, .1);
+}
+
+.horizontal-padding-reset {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.vertical-padding-reset {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.padding-reset {
+  composes: horizontal-padding-reset vertical-padding-reset;
+}

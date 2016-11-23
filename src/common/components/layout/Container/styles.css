@@ -1,0 +1,5 @@
+.container {
+  composes: container from '../../../../styles/flexboxgrid.css';
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,13 @@
+.logo-wrapper {
+  composes: col-xs-3 from '../../../../styles/flexboxgrid.css';
+}
+
+.logo-link {
+  width: 4rem;
+  height: 4rem;
+  display: block;
+}
+
+.img {
+  width: 100%;
+}

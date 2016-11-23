@@ -1,0 +1,19 @@
+.wrapper {
+  composes: col-xs-3 from '../../../../styles/flexboxgrid.css';
+  text-align: right;
+}
+.btn {
+  padding: 0.7em 1.4em;
+  border-radius: 3px;
+  background: transparent;
+  color: #333;
+  font-weight: 700;
+  border: 1px solid grey;
+  transition-duration: 1s;
+}
+
+.btn:hover {
+  background: #21B384;
+  border: 1px solid transparent;
+  transition-duration: 1s;
+}

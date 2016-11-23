@@ -1,0 +1,23 @@
+.messages {
+  list-style-type: none;
+}
+
+.message {
+
+}
+
+.files {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  justify-content: space-between;
+}
+
+.file {
+  width: 50px;
+}
+
+.img {
+  width: 100%;
+}

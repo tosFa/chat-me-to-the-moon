@@ -1,0 +1,7 @@
+.wrapper {
+  composes: row from '../../../../styles/flexboxgrid.css';
+}
+
+.item {
+  composes: col-xs-12 col-sm-6 col-md-4 from '../../../../styles/flexboxgrid.css';
+}
