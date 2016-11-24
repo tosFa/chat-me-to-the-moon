@@ -1,20 +1,19 @@
 import React from 'react';
-import { Match, Miss } from 'react-router';
-import Home from './Home';
-import Login from './Login';
-import Conversation from './Conversation';
-import Contact from './Contact';
+import { Miss, Match } from 'react-router';
+import { MatchWithRoutes } from 'react-router-addons-routes';
 import Error from '../error/Error';
-import Container from '../layout/Container';
+import routes from './config';
 
-export default () =>
-  <Container>
-    <Match exactly pattern="/" component={Home} />
-    <Match exactly pattern="/login" component={Login} />
-    <Match exactly pattern="/conversation" component={Conversation} />
-    <Match exactly pattern="/contact" component={Contact} />
-
+export default (props) =>
+  <div>
+    {
+      routes.map(
+        route =>
+          <MatchWithRoutes
+            key={route.name}
+            {...route}
+            render={(matchProps) => <route.component {...props}/>}
+          />
+      )}
     <Miss component={Error} />
-  </Container>
-
-
+  </div>

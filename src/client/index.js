@@ -13,6 +13,8 @@ import ReactHotLoader from './components/ReactHotLoader';
 import App from '../common/components/app';
 import client from './apollo';
 
+import ActionExecutor from '../common/components/hoc/action-executor';
+
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
 
@@ -30,7 +32,13 @@ function renderApp(TheApp) {
       <ApolloProvider client={client} key="apollo">
         <Provider store={store} key="store">
           <BrowserRouter>
-            <TheApp />
+            {
+              routerProps =>
+                <ActionExecutor {...routerProps} dispatch={store.dispatch}>
+                  <TheApp />
+                </ActionExecutor>
+            }
+
           </BrowserRouter>
         </Provider>
       </ApolloProvider>

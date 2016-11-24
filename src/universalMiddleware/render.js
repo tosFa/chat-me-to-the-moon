@@ -63,7 +63,7 @@ function render(reactAppElement : ?ReactElement, initialState : ?Object) {
         <meta charSet='utf-8' />
         <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
         <meta httpEquiv='Content-Language' content='en' />
-        <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
+        <link rel='shortcut icon' type='image/x-icon' href='/client/favicon.ico' />
 
         ${helmet ? helmet.title.toString() : ''}
         ${helmet ? helmet.meta.toString() : ''}

@@ -5,11 +5,15 @@ import React from 'react';
 import { ServerRouter, createServerRenderContext } from 'react-router';
 import { Provider } from 'react-redux';
 import { matchRoutesToLocation } from 'react-router-addons-routes';
+import { ApolloProvider } from 'react-apollo';
+import client from '../client/apollo';
 import render from './render';
 //import runTasksForLocation from '../shared/universal/routeTasks/runTasksForLocation';
 import App from '../common/components/app';
 import configureStore from '../common/redux/store/configureStore';
 import routes from '../common/components/routes';
+import routeConfig from '../common/components/routes/config';
+import executor from '../common/helpers/routes/executor'
 
 /**
  * An express middleware that is capabable of doing React server side rendering.
@@ -28,14 +32,12 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
 
   // Create the redux store.
   const store = configureStore();
-  const { dispatch, getState } = store;
-
   // Set up a function we can call to render the app and return the result via
   // the response.
-  const renderApp = () => {
-    // First create a context for <ServerRouter>, which will allow us to
-    // query for the results of the render.
-    const context = createServerRenderContext();
+  const context = createServerRenderContext();
+
+  const renderToDOM = () => {
+
 
     // Create the application react element.
     const app = (
@@ -43,9 +45,11 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
         location={request.url}
         context={context}
       >
-        <Provider store={store}>
-          <App />
-        </Provider>
+        <ApolloProvider client={client} key="apollo">
+          <Provider store={store} key="store">
+            <App store={store} />
+          </Provider>
+        </ApolloProvider>
       </ServerRouter>
     );
 
@@ -68,7 +72,6 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
       response.end();
       return;
     }
-
     response
       .status(
         renderResult.missed
@@ -79,8 +82,12 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
           : 200
       )
       .send(html);
-  };
+  }
 
+  const { dispatch, getState } = store;
+  const renderApp = () => {
+    executor({ pathname: request.url }, dispatch).then(() => renderToDOM())
+  }
   renderApp();
 }
 

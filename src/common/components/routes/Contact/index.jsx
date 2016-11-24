@@ -8,6 +8,10 @@ export default class Contact extends React.Component {
     this.handleSubmit = ::this.handleSubmit;
   }
 
+  componentWillMount() {
+
+  }
+
   handleSubmit(values) {
     console.log(values);
     alert('submit');

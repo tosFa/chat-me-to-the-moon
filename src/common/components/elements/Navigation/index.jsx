@@ -23,8 +23,8 @@ const links = [
     icon: <ContactIcon className={styles.icon}/>
   },
   {
-    label: 'conversation',
-    url: '/conversation',
+    label: 'conversations',
+    url: '/conversations',
     icon: <CommentIcon className={styles.icon}/>
   }
 ];

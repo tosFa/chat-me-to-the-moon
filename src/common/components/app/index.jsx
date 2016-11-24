@@ -9,7 +9,7 @@ import Responsive from '../hoc/responsive';
 @Responsive
 export default class App extends React.Component {
   render() {
-    return (<Layout><Routes/></Layout>);
+    return (<Layout {...this.props}><Routes {...this.props}/></Layout>);
   }
 }
 

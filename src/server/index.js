@@ -51,10 +51,15 @@ app.use(bodyParser.json());
 app.use('/graphql', graphQlMiddleware);
 app.use('/graphiql', graphiQlMiddleware);
 
+app.use('/api/v1', (req, res, next) => {
+  console.log('API CALL');
+  res.json({success: true});
+})
+
 // Response compression.
 app.use(compression());
 
-app.post('/upload',upload.any(), (req, res) => {
+app.use('/upload',upload.any(), (req, res) => {
   res.status(200).json(req.files);
   res.end();
 
@@ -71,6 +76,8 @@ app.use(
 
 // Configure static serving of our "public" root http path static files.
 app.use(express.static(path.resolve(appRootPath, './public')));
+
+// Configure upload file route
 app.use('/uploads', express.static(path.resolve(appRootPath, process.env.UPLOAD_DIR)));
 
 // The universal middleware for our React application.

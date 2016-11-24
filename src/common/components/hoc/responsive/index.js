@@ -25,12 +25,18 @@ const functionConstructor = (InnerComponent, showFor = ['xs', 'sm', 'md', 'lg'])
       const size = Object.keys(breakpoints).reduce((accum, curr) => {
         return (breakpoints[curr] < window.innerWidth) ? curr : accum;
       }, 'xs');
-
-      this.setState({size});
+      if (size !== this.state.size || typeof this.state.size === 'undefined') {
+        this.setState({size});
+      }
     }
 
     render() {
       const { size } = this.state;
+
+      if (typeof window === 'undefined' || size === undefined) {
+        //if SSR or size not set yet
+        return (<InnerComponent {...this.props} />);
+      }
 
       return (showFor.find(item => item === size)) ?
         (<InnerComponent {...this.props} {...this.state} />) : null;

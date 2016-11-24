@@ -2,7 +2,6 @@ import superagent from 'superagent';
 import qs from 'qs';
 import log from '../logger';
 import { forEach, pickBy } from 'lodash';
-import config from '../../../../tools/config/api';
 //import pb from 'helpers/progressbar';
 
 const rlist = {};
@@ -21,13 +20,13 @@ const filterEmptyParams = (params) => {
 
 const formatUrl = (url) => {
   url = url[0] === '/' ? url : `/${url}`;
-  return url;
+  //return url;
 
   //if (__SERVER__) {
   //  return `http://${config.API_HOST}:${config.API_PORT}${url}`;
   //}
 
-  return `http://${config.root}:${config.port}/${config.version}${url}`;
+  return `http://${process.env.API_SERVER}:${process.env.API_PORT}/${process.env.API_PREFIX}/${process.env.API_VERSION}${url}`;
 };
 
 export default (defaultHeaders, method) => {
@@ -40,7 +39,7 @@ export default (defaultHeaders, method) => {
     const { getState } = store;
 
     url = formatUrl(url);
-
+    console.log({url});
     const { id = `${method}:${url}`, body, query, attach, headers } = options;
 
     if (process.env.IS_NODE) {
@@ -109,7 +108,7 @@ export default (defaultHeaders, method) => {
 
       request
         .on('abort', onResponse.bind(null, { status: null, error: 'aborted' }))
-        .timeout(Number(config.requestTimeout))
+        .timeout(Number(process.env.API_REQUSET_TIMEOUT))
         .then(onResponse, onResponse);
     });
   };
