@@ -39,7 +39,6 @@ export default (defaultHeaders, method) => {
     const { getState } = store;
 
     url = formatUrl(url);
-    console.log({url});
     const { id = `${method}:${url}`, body, query, attach, headers } = options;
 
     if (process.env.IS_NODE) {

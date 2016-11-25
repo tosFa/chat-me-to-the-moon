@@ -51,6 +51,12 @@ app.use(bodyParser.json());
 app.use('/graphql', graphQlMiddleware);
 app.use('/graphiql', graphiQlMiddleware);
 
+app.use('/api/v1/upload',upload.any(), (req, res) => {
+  res.status(200).json(req.files);
+  res.end();
+
+});
+
 app.use('/api/v1', (req, res, next) => {
   console.log('API CALL');
   res.json({success: true});
@@ -58,12 +64,6 @@ app.use('/api/v1', (req, res, next) => {
 
 // Response compression.
 app.use(compression());
-
-app.use('/upload',upload.any(), (req, res) => {
-  res.status(200).json(req.files);
-  res.end();
-
-});
 
 // Configure static serving of our webpack bundled client files.
 app.use(
