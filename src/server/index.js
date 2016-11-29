@@ -108,7 +108,9 @@ const listener = app.listen(port, () =>
   console.log(`Server listening on port ${port}`)
 );
 
-startWebsocketServer();
+var { websocketServer, subscriptionServer } = startWebsocketServer();
+
+
 
 // We export the listener as it will be handy for our development hot reloader.
 export default listener;

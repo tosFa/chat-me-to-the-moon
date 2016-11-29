@@ -1,3 +1,16 @@
+const HappyPack = require('happypack');
+
+// Generates a HappyPack plugin.
+// @see https://github.com/amireh/happypack/
+function happyPackPlugin({ name, loaders }) {
+  return new HappyPack({
+    id: name,
+    verbose: false,
+    threads: 4,
+    loaders,
+  });
+}
+
 // :: [Any] -> [Any]
 function removeEmpty(x) {
   return x.filter(y => !!y);
@@ -19,6 +32,7 @@ function merge() {
 }
 
 module.exports = {
+  happyPackPlugin,
   removeEmpty,
   ifElse,
   merge,

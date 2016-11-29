@@ -1,7 +1,7 @@
-import Home from './Home';
-import Login from './Login';
-import Conversation from './Conversation';
-import Contact from './Contact';
+import Home from '../routes/Home';
+import Login from '../routes/Login';
+import Conversation from '../routes/Conversation';
+import Contact from '../routes/Contact';
 import { testAsyncAction, testAsyncAction2 } from '../../redux/actions';
 
 export default [

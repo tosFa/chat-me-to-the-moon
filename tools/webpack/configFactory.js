@@ -7,7 +7,7 @@ const nodeExternals = require('webpack-node-externals');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const appRoot = require('app-root-path');
 const WebpackMd5Hash = require('webpack-md5-hash');
-const { removeEmpty, ifElse, merge } = require('../utils');
+const { removeEmpty, ifElse, merge, happyPackPlugin } = require('../utils');
 const envVars = require('../config/envVars');
 
 const appRootPath = appRoot.toString();
@@ -121,7 +121,10 @@ function configFactory ({ target, mode }, { json }) {
           ifClient('regenerator-runtime/runtime'),
           path.resolve(appRootPath, `./src/${target}/index.js`),
         ]),
-      }
+      },
+      ifProdClient({
+        vendor: ['react', 'react-dom', 'redux', 'react-redux', 'react-router']
+      })
     ),
     output: {
       // The dir in which our bundle should be output.
@@ -283,14 +286,17 @@ function configFactory ({ target, mode }, { json }) {
         // CSS files.
         new ExtractTextPlugin({ filename: '[name]-[chunkhash].css', allChunks: true })
       ),
-    ]),
-    module: {
-      rules: [
-        // Javascript
-        {
-          test: /\.jsx?$/,
-          loader: 'babel-loader',
-          include: [path.resolve(appRootPath, './src')],
+
+
+
+      //HAPPY PLUGIN
+
+      // HappyPack 'javascript' instance.
+      happyPackPlugin({
+        name: 'happypack-javascript',
+        // We will use babel to do all our JS processing.
+        loaders: [{
+          path: 'babel',
           query: {
             presets: [
               // JSX
@@ -304,8 +310,9 @@ function configFactory ({ target, mode }, { json }) {
               ['latest', { es2015: { modules: false } }],
             ],
             plugins: removeEmpty([
+              ifDevClient('react-hot-loader/babel'),
               // We are adding the experimental "object rest spread" syntax as
-              // it is super useful.  There is a caveat with the plugin that
+              // it is super useful.  There is a caviat with the plugin that
               // requires us to include the destructuring plugin too.
               'transform-function-bind',
               'transform-object-rest-spread',
@@ -313,23 +320,63 @@ function configFactory ({ target, mode }, { json }) {
               'transform-decorators-legacy',
               // The class properties plugin is really useful for react components.
               'transform-class-properties',
-              // Our dev client build will need the react hot loader babel plugin
-              ifDevClient('react-hot-loader/babel'),
-              // We use the code-split-component/babel plugin and only enable
-              // code splitting when bundling a production client bundle.
-              // For our node and development client bundles we configure the
-              // code-split-component/babel so that it will transpile
-              // the System.import statements on our CodeSplit components
-              // into synchronous require statements. This then supports
-              // full server side rendering as well as React Hot Loader 3 on
-              // our development client bundle.
+              // This plugin transpiles the code-split-component component
+              // instances, taking care of all the heavy boilerplate that we
+              // would have had to do ourselves to get code splitting w/SSR
+              // support working.
               // @see https://github.com/ctrlplusb/code-split-component
               [
                 'code-split-component/babel',
-                { enableCodeSplitting: isProd && isClient },
+                {
+                  // The code-split-component doesn't work nicely with hot
+                  // module reloading, which we use in our development builds,
+                  // so we will disable it (which ensures synchronously
+                  // behaviour on the CodeSplit instances).
+                  disabled: isDev,
+                  // When a node target (i.e. a server rendering bundle) then
+                  // we will set the role as being server which will ensure that
+                  // our code split components are resolved synchronously.
+                  role: isNodeTarget ? 'server' : 'client',
+                },
               ],
             ]),
           },
+        }],
+      }),
+
+      // HappyPack 'css' instance for development client.
+      ifDevClient(
+        happyPackPlugin({
+          name: 'happypack-devclient-css',
+          // We will use a straight style & css loader along with source maps.
+          // This combo gives us a better development experience.
+          loaders: [
+            'style-loader',
+            {
+              path: 'css-loader',
+              query: {
+                sourceMap: true,
+                modules: true,
+                localIdentName: "[name]-[local]",
+                minimize: false,
+                importLoaders: true
+              }
+            },
+          ],
+        })
+      ),
+    ]),
+    module: {
+      rules: removeEmpty([
+
+        {
+          test: /\.jsx?$/,
+          // We will defer all our js processing to the happypack plugin
+          // named "happypack-javascript".
+          // See the respective plugin within the plugins section for full
+          // details on what loader is being implemented.
+          loader: 'happypack/loader?id=happypack-javascript',
+          include: [path.resolve(appRootPath, './src')],
         },
 
         // JSON
@@ -353,33 +400,17 @@ function configFactory ({ target, mode }, { json }) {
           },
         },
 
-        // CSS
+
         merge(
-          { test: /\.css$/ },
-          // When targeting the server we use the "/locals" version of the
-          // css loader.
-          ifNodeTarget({
-            loaders: [
-              {
-                loader: 'css-loader/locals',
-                query:
-                {
-                  sourceMap: false,
-                  modules: true,
-                  localIdentName: ifProdClient("[local]-[hash:base62:8]", "[name]-[local]"),
-                  minimize: false
-                }
-              }
-            ],
-          }),
+          {
+            test: /\.css$/,
+          },
           // For a production client build we use the ExtractTextPlugin which
-          // will extract our CSS into CSS files.  The plugin needs to be
-          // registered within the plugins section too.
+          // will extract our CSS into CSS files.
+          // The plugin needs to be registered within the plugins section too.
+          // Also, as we are using the ExtractTextPlugin we can't use happypack
+          // for this case.
           ifProdClient({
-            // First: the loader(s) that should be used when the css is not extracted
-            // Second: the loader(s) that should be used for converting the resource to a css exporting module
-            // Note: Unfortunately it seems like it does not support the new query syntax of webpack v2
-            // See also: https://github.com/webpack/extract-text-webpack-plugin/issues/196
             loader: ExtractTextPlugin.extract({
               fallbackLoader: "style-loader",
               allChunks: true,
@@ -399,29 +430,33 @@ function configFactory ({ target, mode }, { json }) {
                 ]
             })
           }),
-          // For a development client we will use a straight style & css loader
-          // along with source maps.  This combo gives us a better development
-          // experience.
-          ifDevClient({
+          // When targetting the server we use the "/locals" version of the
+          // css loader, as we don't need any css files for the server.
+          ifNodeTarget({
             loaders: [
               {
-                loader: "style-loader"
-              },
-              {
-                loader: "css-loader",
+                loader: 'css-loader/locals',
                 query:
                 {
-                  sourceMap: true,
+                  sourceMap: false,
                   modules: true,
-                  localIdentName: "[name]-[local]",
-                  minimize: false,
-                  importLoaders: true
+                  localIdentName: ifProdClient("[local]-[hash:base62:8]", "[name]-[local]"),
+                  minimize: false
                 }
-              },
+              }
+            ],
+          }),
+          // For development clients we will defer all our css processing to the
+          // happypack plugin named "happypack-devclient-css".
+          // See the respective plugin within the plugins section for full
+          // details on what loader is being implemented.
+          ifDevClient({
+            loaders: [
+              'happypack/loader?id=happypack-devclient-css'
             ],
           })
         ),
-      ],
+      ]),
     },
   };
 }

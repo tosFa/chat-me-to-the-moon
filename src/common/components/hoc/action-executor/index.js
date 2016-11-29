@@ -1,11 +1,11 @@
 import React from 'react';
-import executor from '../../../helpers/routes/executor'
+import executor from '../../../helpers/routes/executor';
 
 export default class ActionExecutor extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.location != null && nextProps.location !== this.props.location) {
-      executor(nextProps.location, nextProps.dispatch);
+      executor(nextProps.location, nextProps.dispatch, nextProps.routes);
     }
   }
 

@@ -14,6 +14,7 @@ export default () => {
     `Websocket Server is now running on http://localhost:${process.env.WS_PORT}`
   ));
 
+  var subscriptionManager = createSubscriptionManager(schema);
 // eslint-disable-next-line
   const subscriptionServer = new SubscriptionServer(
     {

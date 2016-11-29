@@ -5,14 +5,13 @@ import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router';
 import { Provider } from 'react-redux';
-
 import { ApolloProvider } from 'react-apollo';
 
 import configureStore from '../common/redux/store/configureStore';
 import ReactHotLoader from './components/ReactHotLoader';
 import App from '../common/components/app';
 import client from './apollo';
-
+import routes from '../common/components/routes/config';
 import ActionExecutor from '../common/components/hoc/action-executor';
 
 // Get the DOM Element that will host our React application.
@@ -34,11 +33,10 @@ function renderApp(TheApp) {
           <BrowserRouter>
             {
               routerProps =>
-                <ActionExecutor {...routerProps} dispatch={store.dispatch}>
-                  <TheApp />
+                <ActionExecutor {...routerProps} dispatch={store.dispatch} routes={routes}>
+                  <TheApp routes={routes}/>
                 </ActionExecutor>
             }
-
           </BrowserRouter>
         </Provider>
       </ApolloProvider>
@@ -55,7 +53,17 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   // Any changes to our App will cause a hotload re-render.
   module.hot.accept(
     '../common/components/app',
-    () => renderApp(require('../common/components/app').default)
+    () => {
+      console.log('accepting');
+      return renderApp(require('../common/components/app').default);
+    }
+  );
+  module.hot.accept(
+    '../common/components/routes/config',
+    () => {
+      console.log('accepting');
+      return renderApp(require('../common/components/app').default);
+    }
   );
 }
 

@@ -1,8 +1,6 @@
 import { matchRoutesToLocation } from 'react-router-addons-routes';
-import routes from '../../components/routes/config';
 
-
-export default (location, dispatch) => {
+export default (location, dispatch, routes) => {
   const { matchedRoutes, params } = matchRoutesToLocation(routes, location);
 
   if (matchedRoutes) {

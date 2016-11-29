@@ -9,6 +9,7 @@ import styles from './styles.css';
 import { upload } from '../../../redux/actions';
 import { CONVERSATION_DATA_QUERY, CONVERSATION_MUTATION_QUERY, CONVERSATION_SUBSCRIPTION_QUERY}
   from '../../../../client/graphql/conversations';
+import Container from '../../layout/Container';
 
 //@todo replace in routes
 const conversationId = 1;
@@ -74,7 +75,7 @@ export class Conversation extends React.Component {
       conversationId: 1,
       text: message,
     };
-    console.log(files.length);
+
     if (files.length) {
       uploadFile(files)
         .then(() => {
@@ -113,8 +114,8 @@ export class Conversation extends React.Component {
     const { files } = this.props;
     const { messages } = this.state;
     return (
-      <div>
-        <h1>Conversation</h1>
+      <Container>
+        <h1>Conversations!!!</h1>
         <ul styleName="messages">
           {messages.map(
             (message, index) =>
@@ -140,7 +141,7 @@ export class Conversation extends React.Component {
         </ul>
 
         <button onClick={this.handleSubmit}>Send</button>
-      </div>
+      </Container>
     );
   }
 }

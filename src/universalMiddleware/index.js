@@ -4,16 +4,13 @@ import type { $Request, $Response, Middleware } from 'express';
 import React from 'react';
 import { ServerRouter, createServerRenderContext } from 'react-router';
 import { Provider } from 'react-redux';
-import { matchRoutesToLocation } from 'react-router-addons-routes';
 import { ApolloProvider } from 'react-apollo';
 import client from '../client/apollo';
 import render from './render';
-//import runTasksForLocation from '../shared/universal/routeTasks/runTasksForLocation';
 import App from '../common/components/app';
 import configureStore from '../common/redux/store/configureStore';
-import routes from '../common/components/routes';
-import routeConfig from '../common/components/routes/config';
-import executor from '../common/helpers/routes/executor'
+import executor from '../common/helpers/routes/executor';
+import routes from '../common/components/routes/config';
 
 /**
  * An express middleware that is capabable of doing React server side rendering.
@@ -41,16 +38,13 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
 
     // Create the application react element.
     const app = (
-      <ServerRouter
-        location={request.url}
-        context={context}
-      >
-        <ApolloProvider client={client} key="apollo">
-          <Provider store={store} key="store">
-            <App store={store} />
-          </Provider>
-        </ApolloProvider>
-      </ServerRouter>
+      <ApolloProvider client={client} key="apollo">
+        <Provider store={store} key="store">
+          <ServerRouter location={request.url} context={context}>
+            <App store={store} routes={routes}/>
+          </ServerRouter>
+        </Provider>
+      </ApolloProvider>
     );
 
     // Render the app to a string.
@@ -85,8 +79,9 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
   }
 
   const { dispatch, getState } = store;
+
   const renderApp = () => {
-    executor({ pathname: request.url }, dispatch).then(() => renderToDOM())
+    executor({ pathname: request.url }, dispatch, routes).then(() => renderToDOM())
   }
   renderApp();
 }
