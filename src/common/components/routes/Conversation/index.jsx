@@ -115,32 +115,34 @@ export class Conversation extends React.Component {
     const { messages } = this.state;
     return (
       <Container>
-        <h1>Conversations!!!</h1>
-        <ul styleName="messages">
-          {messages.map(
-            (message, index) =>
-              <li styleName="message" key={index}>
-                {message.text}
-                {message.files ? this.renderFiles(message.files) : null}
-              </li>
-          )}
-        </ul>
+        <div styleName="block">
+          <h1>Conversations</h1>
+          <ul styleName="messages">
+            {messages.map(
+              (message, index) =>
+                <li styleName="message" key={index}>
+                  {message.text}
+                  {message.files ? this.renderFiles(message.files) : null}
+                </li>
+            )}
+          </ul>
 
-        <form>
-          <Field component="textarea" name="message"/>
-          <Field name="files" component={FileInput} onDrop={this.onDrop}/>
+          <form>
+            <Field component="textarea" name="message"/>
+            <Field name="files" component={FileInput} onDrop={this.onDrop}/>
 
-        </form>
-        <ul styleName="files">
-          {files.map(
-            (file, index) =>
-              <li styleName="file" key={index}>
-                <img src={file.preview} styleName="img"/>
-              </li>
-          )}
-        </ul>
+          </form>
+          <ul styleName="files">
+            {files.map(
+              (file, index) =>
+                <li styleName="file" key={index}>
+                  <img src={file.preview} styleName="img"/>
+                </li>
+            )}
+          </ul>
 
-        <button onClick={this.handleSubmit}>Send</button>
+          <button onClick={this.handleSubmit}>Send</button>
+        </div>
       </Container>
     );
   }

@@ -10,34 +10,60 @@ const webpack = require('webpack');
 const createNotification = require('./createNotification');
 const HotServer = require('./hotServer');
 const HotClient = require('./hotClient');
+const ensureVendorDLLExists = require('./ensureVendorDLLExists');
+const vendorDLLPaths = require('../config/vendorDLLPaths');
+const envVars = require('../config/envVars');
 
 class HotDevelopment {
   constructor() {
-    try {
-      const clientConfigFactory = require('../webpack/client.config');
-      const clientConfig = clientConfigFactory({ mode: 'development' });
-      this.clientCompiler = webpack(clientConfig);
+    //we check if we want to use our vendor DLL and if we already have it generated
+    ensureVendorDLLExists().then(() => {
+      try {
+        const clientConfigFactory = require('../webpack/client.config');
+        const clientConfig = clientConfigFactory({ mode: 'development' });
+        this.clientCompiler = webpack(clientConfig);
 
-      const middlewareConfigFactory = require('../webpack/universalMiddleware.config');
-      const middlewareConfig = middlewareConfigFactory({ mode: 'development' });
-      this.middlewareCompiler = webpack(middlewareConfig);
 
-      const serverConfigFactory = require('../webpack/server.config');
-      const serverConfig = serverConfigFactory({ mode: 'development' });
-      this.serverCompiler = webpack(serverConfig);
-    } catch (err) {
+        if (envVars.USE_DEV_DLL === 'true') {
+          // Install the vendor DLL plugin.
+          clientConfig.plugins.push(
+            new webpack.DllReferencePlugin({
+              manifest: require(vendorDLLPaths.dllJsonPath),
+            })
+          );
+        }
+
+
+        const middlewareConfigFactory = require('../webpack/universalMiddleware.config');
+        const middlewareConfig = middlewareConfigFactory({ mode: 'development' });
+        this.middlewareCompiler = webpack(middlewareConfig);
+
+        const serverConfigFactory = require('../webpack/server.config');
+        const serverConfig = serverConfigFactory({ mode: 'development' });
+        this.serverCompiler = webpack(serverConfig);
+      } catch (err) {
+        createNotification({
+          title: 'development',
+          level: 'error',
+          message: 'Webpack configs are invalid, please check the console for more information.',
+        });
+        console.log(err);
+        return;
+      }
+
+      this.prepHotServer();
+      this.prepHotUniversalMiddleware();
+      this.prepHotClient();
+    }).catch((err) => {
       createNotification({
-        title: 'development',
+        title: 'vendorDLL',
         level: 'error',
-        message: 'Webpack configs are invalid, please check the console for more information.',
+        message: 'Unfortunately an error occured whilst trying to build the vendor dll used by the development server. Please check the console for more information.',
       });
-      console.log(err);
-      return;
-    }
-
-    this.prepHotServer();
-    this.prepHotUniversalMiddleware();
-    this.prepHotClient();
+      if (err) {
+        console.log(err);
+      }
+    });
   }
 
   prepHotClient() {

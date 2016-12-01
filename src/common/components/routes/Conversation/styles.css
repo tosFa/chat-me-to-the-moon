@@ -6,6 +6,11 @@
 
 }
 
+.block {
+  display: flex;
+  flex-direction: column;
+
+}
 .files {
   list-style-type: none;
   display: flex;
@@ -15,7 +20,7 @@
 }
 
 .file {
-  width: 50px;
+  flex-basis: 50%;
 }
 
 .img {

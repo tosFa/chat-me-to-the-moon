@@ -121,10 +121,11 @@ function configFactory ({ target, mode }, { json }) {
           ifClient('regenerator-runtime/runtime'),
           path.resolve(appRootPath, `./src/${target}/index.js`),
         ]),
-      },
-      ifProdClient({
-        vendor: ['react', 'react-dom', 'redux', 'react-redux', 'react-router']
-      })
+        //vendor: ['react', 'react-dom', 'redux', 'react-redux', 'react-router']
+      }
+      //ifProdClient({
+      //  vendor: ['react', 'react-dom', 'redux', 'react-redux', 'react-router']
+      //})
     ),
     output: {
       // The dir in which our bundle should be output.

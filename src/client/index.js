@@ -53,17 +53,11 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   // Any changes to our App will cause a hotload re-render.
   module.hot.accept(
     '../common/components/app',
-    () => {
-      console.log('accepting');
-      return renderApp(require('../common/components/app').default);
-    }
+    () => renderApp(require('../common/components/app').default)
   );
   module.hot.accept(
     '../common/components/routes/config',
-    () => {
-      console.log('accepting');
-      return renderApp(require('../common/components/app').default);
-    }
+    () => renderApp(require('../common/components/app').default)
   );
 }
 
