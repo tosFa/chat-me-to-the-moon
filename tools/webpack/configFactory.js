@@ -357,12 +357,18 @@ function configFactory ({ target, mode }, { json }) {
               path: 'css-loader',
               query: {
                 sourceMap: true,
-                modules: true,
+                modules: envVars.USE_CSS_MODULES,
                 localIdentName: "[name]-[local]",
                 minimize: false,
                 importLoaders: true
               }
             },
+            {
+              path: 'postcss-loader',
+              query: {
+                config: `./tools/config`
+              }
+            }
           ],
         })
       ),
@@ -422,7 +428,7 @@ function configFactory ({ target, mode }, { json }) {
                     query:
                     {
                       sourceMap: true,
-                      modules: true,
+                      modules: envVars.USE_CSS_MODULES,
                       localIdentName: "[local]-[hash:base62:8]",
                       minimize: false,
                       importLoaders: true
@@ -440,7 +446,7 @@ function configFactory ({ target, mode }, { json }) {
                 query:
                 {
                   sourceMap: false,
-                  modules: true,
+                  modules: envVars.USE_CSS_MODULES,
                   localIdentName: ifProdClient("[local]-[hash:base62:8]", "[name]-[local]"),
                   minimize: false
                 }
