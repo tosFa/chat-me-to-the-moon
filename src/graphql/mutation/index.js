@@ -1,7 +1,9 @@
 import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLInputObjectType, GraphQLList } from 'graphql';
 import * as types from '../types';
+import { fields as userFields } from '../types/user';
 import db from '../../db';
 import { pubsub } from '../subscription/pubsub';
+import { api } from '../helpers';
 
 const FileType = new GraphQLObjectType({
   name: 'file',
@@ -49,6 +51,29 @@ export default new GraphQLObjectType({
           .then(() => db.find(item => item.id === args.id));
       }
     },
+
+    signup: {
+      type: types.UserType,
+      args: {
+        email: {
+          type: GraphQLString,
+          description: "email"
+        },
+        password: {
+          type: GraphQLString,
+          description: "password"
+        },
+        password_confirmation: {
+          type: GraphQLString,
+          description: "password_confirmation"
+        }
+      },
+      resolve: (root, args) => {
+        const options = { method: 'POST', body: JSON.stringify({ user: args }) };
+
+        return api('/api/users/', options).then(result => result.user);
+      }
+    }
 
   }
 });

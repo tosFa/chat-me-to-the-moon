@@ -5,7 +5,7 @@ import React from 'react';
 import { ServerRouter, createServerRenderContext } from 'react-router';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
-import client from '../client/apollo';
+import client from '../common/apollo';
 import render from './render';
 import App from '../common/components/app';
 import configureStore from '../common/redux/store/configureStore';

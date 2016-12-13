@@ -1,10 +1,11 @@
 /* @flow */
 
-import { renderToString } from 'react-dom/server';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import serialize from 'serialize-javascript';
 import Helmet from 'react-helmet';
+import { renderToStringWithData } from "react-apollo/server"
 import clientAssets from './clientAssets';
-import type { ReactElement } from '../shared/universal/types/react';
+
 
 function styleTags(styles : Array<string>) {
   return styles
@@ -37,27 +38,28 @@ const scripts = scriptTags(clientAssets.scripts);
  *
  * @return The full HTML page in the form of a React element.
  */
-function render(reactAppElement : ?ReactElement, initialState : ?Object) {
+function render(reactAppElement, initialState) {
   const reactApp = reactAppElement
     ? renderToString(reactAppElement)
     : '';
 
-  // If we had a reactAppElement then we need to run Helmet.rewind to extract
-  // all the helmet information out of the helmet provider.
-  // Note: you need to have called the renderToString on the react element before
-  // running this!
-  // @see https://github.com/nfl/react-helmet
-  const helmet = reactAppElement
-    // We run 'react-helmet' after our renderToString call so that we can fish
-    // out all the attributes which need to be attached to our page.
-    // React Helmet allows us to control our page header contents via our
-    // components.
+  const renderServerApp = (content) => {
+    // If we had a reactAppElement then we need to run Helmet.rewind to extract
+    // all the helmet information out of the helmet provider.
+    // Note: you need to have called the renderToString on the react element before
+    // running this!
     // @see https://github.com/nfl/react-helmet
-    ? Helmet.rewind()
-    // There was no react element, so we just us an empty helmet.
-    : null;
+    const helmet = reactAppElement
+      // We run 'react-helmet' after our renderToString call so that we can fish
+      // out all the attributes which need to be attached to our page.
+      // React Helmet allows us to control our page header contents via our
+      // components.
+      // @see https://github.com/nfl/react-helmet
+      ? Helmet.rewind()
+      // There was no react element, so we just us an empty helmet.
+      : null;
 
-  return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
     <html ${helmet ? helmet.htmlAttributes.toString() : ''}>
       <head>
         <meta charSet='utf-8' />
@@ -77,18 +79,27 @@ function render(reactAppElement : ?ReactElement, initialState : ?Object) {
 
       </head>
       <body>
-        <div id='app'>${reactApp}</div>
+        <div id='app'>${content}</div>
 
         <script type='text/javascript'>${
-          initialState
-            ? `window.APP_STATE=${serialize(initialState)};`
-            : ''
-        }</script>
+      initialState
+        ? `window.APP_STATE=${serialize(initialState)};`
+        : ''
+      }</script>
 
         ${scripts}
         ${helmet ? helmet.script.toString() : ''}
       </body>
     </html>`;
+  }
+
+  //return renderToStringWithData(reactAppElement).then(content => {
+  //  console.log(3423432423);
+  //  return renderToString(renderServerApp(content));
+  //}).catch(() => {
+  //  console.log(err);
+  //});
+  return renderServerApp(reactApp);
 }
 
 export default render;

@@ -1,4 +1,6 @@
 const HappyPack = require('happypack');
+const execSync = require('child_process').execSync;
+const appRootPath = require('app-root-path').toString();
 
 // Generates a HappyPack plugin.
 // @see https://github.com/amireh/happypack/
@@ -31,9 +33,14 @@ function merge() {
   );
 }
 
+function exec(command) {
+  execSync(command, { stdio: 'inherit', cwd: appRootPath });
+}
+
 module.exports = {
   happyPackPlugin,
   removeEmpty,
   ifElse,
   merge,
+  exec
 };

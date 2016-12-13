@@ -10,6 +10,7 @@ export default class ActionExecutor extends React.Component {
   }
 
   render() {
+
     return React.Children.only(this.props.children);
   }
 }

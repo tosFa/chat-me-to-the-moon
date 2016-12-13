@@ -4,7 +4,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import reducer from '../reducers';
 import { getApi } from '../../helpers/api';
 import createApiMiddleware from '../mw/createApiMiddleware';
-import client from '../../../client/apollo';
+import client from '../../../common/apollo';
 
 function configureStore(initialState) {
   const middlewares = compose(
@@ -22,9 +22,8 @@ function configureStore(initialState) {
       : f => f
   );
 
-  const store = initialState
-    ? createStore(reducer, initialState, middlewares)
-    : createStore(reducer, middlewares);
+  initialState = initialState || {} ;
+  const store = createStore(reducer, initialState, middlewares);
 
   if (process.env.NODE_ENV === 'development' && module.hot) {
     // Enable Webpack hot module replacement for reducers. This is so that we

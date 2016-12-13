@@ -1,7 +1,7 @@
 import { createNetworkInterface } from 'apollo-client';
 import { Client } from 'subscriptions-transport-ws';
-import createApolloClient from '../helpers/create-apollo-client';
-import addGraphQLSubscriptions from '../helpers/subscriptions';
+import createApolloClient from '../../client/helpers/create-apollo-client';
+import addGraphQLSubscriptions from '../../client/helpers/subscriptions';
 
 
 const wsClient = new Client('ws://localhost:9000');
@@ -12,6 +12,7 @@ const networkInterface = createNetworkInterface({
     credentials: 'same-origin',
   },
   transportBatching: true,
+  ssrMode: true,
 });
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(

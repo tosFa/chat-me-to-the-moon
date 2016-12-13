@@ -6,6 +6,6 @@ import Layout from '../layout/Layout';
 
 export default (props) =>
   <Layout>
-    {props.routes.map(route => <Match key={route.name} {...route} />)}
+    {props.routes.map(route => <Match key={route.name} {...route} {...props} />)}
     <Miss component={Error}/>
   </Layout>

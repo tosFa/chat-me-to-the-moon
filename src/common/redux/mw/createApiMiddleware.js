@@ -20,10 +20,9 @@ export default (api) => (store) => {
 
     const actionPromise = promise(api);
 
-    actionPromise.then(
-      ({ result }) => next({ ...rest, result, type: SUCCESS }),
-      ({ result, error }) => next({ ...rest, result, error, type: FAILURE })
-    );
+    actionPromise
+      .then(({ result }) => next({ ...rest, result, type: SUCCESS }))
+      .catch(({ result, error }) => next({ ...rest, result, error, type: FAILURE }));
 
     return actionPromise;
   };

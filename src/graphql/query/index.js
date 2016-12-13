@@ -23,6 +23,15 @@ export default new GraphQLObjectType({
         }
       },
       resolve: (root, args) => ({ messages: db.filter(item => item.conversationId === args.id) })
+    },
+    user: {
+      type: types.UserType,
+      args: {
+        id: {
+          type: GraphQLInt
+        }
+      },
+      resolve: (root, args) => ({id: 1, email: ''})
     }
   }
 });

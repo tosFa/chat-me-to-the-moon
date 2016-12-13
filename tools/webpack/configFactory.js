@@ -322,24 +322,24 @@ function configFactory ({ target, mode }, { json }) {
               // The class properties plugin is really useful for react components.
               'transform-class-properties',
               // This plugin transpiles the code-split-component component
-              // instances, taking care of all the heavy boilerplate that we
+              // instances, taking care of all the heavy boilerplate that wele
               // would have had to do ourselves to get code splitting w/SSR
               // support working.
               // @see https://github.com/ctrlplusb/code-split-component
-              [
-                'code-split-component/babel',
-                {
-                  // The code-split-component doesn't work nicely with hot
-                  // module reloading, which we use in our development builds,
-                  // so we will disable it (which ensures synchronously
-                  // behaviour on the CodeSplit instances).
-                  disabled: isDev,
-                  // When a node target (i.e. a server rendering bundle) then
-                  // we will set the role as being server which will ensure that
-                  // our code split components are resolved synchronously.
-                  role: isNodeTarget ? 'server' : 'client',
-                },
-              ],
+              //[
+              //  'code-split-component/babel',
+              //  {
+              //    // The code-split-component doesn't work nicely with hot
+              //    // module reloading, which we use in our development builds,
+              //    // so we will disable it (which ensures synchronously
+              //    // behaviour on the CodeSplit instances).
+              //    disabled: isDev,
+              //    // When a node target (i.e. a server rendering bundle) then
+              //    // we will set the role as being server which will ensure that
+              //    // our code split components are resolved synchronously.
+              //    role: isNodeTarget ? 'server' : 'client',
+              //  },
+              //],
             ]),
           },
         }],
@@ -448,7 +448,8 @@ function configFactory ({ target, mode }, { json }) {
                   sourceMap: false,
                   modules: envVars.USE_CSS_MODULES,
                   localIdentName: ifProdClient("[local]-[hash:base62:8]", "[name]-[local]"),
-                  minimize: false
+                  minimize: false,
+                  importLoaders: true
                 }
               }
             ],

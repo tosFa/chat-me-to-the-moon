@@ -10,7 +10,7 @@ import { ApolloProvider } from 'react-apollo';
 import configureStore from '../common/redux/store/configureStore';
 import ReactHotLoader from './components/ReactHotLoader';
 import App from '../common/components/app';
-import client from './apollo';
+import client from '../common/apollo';
 import routes from '../common/components/routes/config';
 import ActionExecutor from '../common/components/hoc/action-executor';
 
@@ -34,7 +34,7 @@ function renderApp(TheApp) {
             {
               routerProps =>
                 <ActionExecutor {...routerProps} dispatch={store.dispatch} routes={routes}>
-                  <TheApp routes={routes}/>
+                  <TheApp routes={routes} />
                 </ActionExecutor>
             }
           </BrowserRouter>
