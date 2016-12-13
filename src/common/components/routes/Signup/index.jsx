@@ -1,5 +1,8 @@
 import React from 'react';
-import Form from '../../forms/Signup'
+import Form from '../../forms/Signup';
+import { SIGNUP_MUTATION_QUERY } from '../../../../client/graphql';
+import { graphql } from 'react-apollo';
+
 
 export class Signup extends React.Component {
   constructor(props) {
@@ -9,7 +12,13 @@ export class Signup extends React.Component {
   }
 
   handleSubmit(values) {
-    console.log(values);
+    const { signup } = this.props;
+
+    signup(values).then((...args) => {
+      console.log({args});
+      alert('Signup success');
+    })
+
 
   }
 
@@ -23,4 +32,16 @@ export class Signup extends React.Component {
   }
 }
 
-export default Signup;
+const withMutation = graphql(SIGNUP_MUTATION_QUERY, {
+  props: ({ ownProps, mutate }) => ({
+    signup: ({ email, password, password_confirmation }) => {
+      return mutate({
+        variables: { email, password, password_confirmation },
+      })
+    }
+
+  })
+});
+
+
+export default withMutation(Signup);

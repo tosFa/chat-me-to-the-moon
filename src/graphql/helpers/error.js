@@ -1,0 +1,1 @@
+export default (result) => Object.keys(result.errors).map(error => ({ key: error, errors: result.errors[error] }));

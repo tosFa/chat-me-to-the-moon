@@ -1,4 +1,5 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull } from "graphql";
+import ErrorType from "./error";
 
 export const fields = {
   id: {
@@ -13,7 +14,10 @@ export const fields = {
     type: GraphQLString,
     description: "auth token"
   },
-
+  errors: {
+    type: new GraphQLList(ErrorType),
+    description: "Validation errors"
+  },
 };
 
 export const args = {
@@ -33,7 +37,7 @@ export const args = {
 
 };
 export default new GraphQLObjectType({
-  name: 'user',
-  description: 'User',
+  name: "user",
+  description: "User",
   fields
 });

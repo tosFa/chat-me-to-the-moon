@@ -1,17 +1,16 @@
 import fetch  from 'isomorphic-fetch';
+const envVars = require('../../../tools/config/envVars');
 
-const headers = () => {
-  return {
-    'Content-Type': 'application/json'
-  };
-}
+const headers = (extraHeaders) => ({
+  'Content-Type': 'application/json',
+  ...extraHeaders
+});
+
 export default (relativeUrl, options = {}) => {
-
-  const baseUrl = 'http://localhost:3000';
-
+  const baseUrl = `${envVars.API_PROTOCOL}://${envVars.API_SERVER}:${envVars.API_PORT}`;
 
   options = Object.assign({}, { headers: headers(), method: 'GET'}, options);
-console.log('options: ', options);
+
   return new Promise((resolve, reject) => {
     fetch(`${baseUrl}${relativeUrl}`, options)
       .then(res => res.json())

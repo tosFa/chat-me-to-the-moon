@@ -3,7 +3,7 @@ import * as types from '../types';
 import { fields as userFields } from '../types/user';
 import db from '../../db';
 import { pubsub } from '../subscription/pubsub';
-import { api } from '../helpers';
+import { api, normalizeErrors } from '../helpers';
 
 const FileType = new GraphQLObjectType({
   name: 'file',
@@ -71,7 +71,12 @@ export default new GraphQLObjectType({
       resolve: (root, args) => {
         const options = { method: 'POST', body: JSON.stringify({ user: args }) };
 
-        return api('/api/users/', options).then(result => result.user);
+        return api('/api/users/', options).then(result => {
+          if (result.errors) {
+            return { errors: normalizeErrors(result) };
+          }
+          return result.user;
+        });
       }
     }
 
