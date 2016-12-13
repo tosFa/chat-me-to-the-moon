@@ -7,9 +7,11 @@ const createSubscriptionManager = (schema) => new SubscriptionManager({
   pubsub,
   setupFunctions: {
     messageAdded: (options, args) => ({
-      messageAdded: message => {
-        console.log('oac: ', options, args, message);
-        return message.conversationId === args.id;
+      messageAdded: {
+        filter: message => {
+          console.log('oac: ', options, args, message);
+          return message.conversationId === args.id;
+        }
       },
     }),
   },
