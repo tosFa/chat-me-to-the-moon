@@ -1,6 +1,7 @@
 import React from 'react';
+import { omit } from '../../../helpers/duckTools';
 
-export default ({ children }) =>
+export default (props) =>
   <main>
-    {children}
+    {React.Children.map(props.children, child => React.cloneElement(child, omit(props, ['children'])))}
   </main>

@@ -43,6 +43,9 @@ export default new GraphQLObjectType({
       },
       resolve: (root, args) => api(`/users/confirmation?confirmation_token=${args.confirmation_token}`)
         .then(result => result.errors ? { errors: normalizeErrors(result) } : result.user)
-    }
+    },
+    //signin,
+    //signout
+
   }
 });

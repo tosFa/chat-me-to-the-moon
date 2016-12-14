@@ -22,7 +22,7 @@ const MatchWhenAuthorized = ({ component: Component, ...rest }) => {
 }
 
 export default (props) =>
-  <Layout>
+  <Layout {...props}>
     {props.routes.map(route => {
       const { component: Component, ...rest } = route;
 
