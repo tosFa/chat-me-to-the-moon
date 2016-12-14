@@ -10,3 +10,14 @@ mutation Signup($email: String!, $password: String!, $password_confirmation: Str
     }
   }
 }`;
+
+export const CONFIRMATION_DATA_QUERY = gql `
+query Confirmation($confirmation_token: String!) {
+  confirmation(confirmation_token: $confirmation_token){
+    auth_token
+    errors {
+      key
+      errors
+    }
+  }
+}`;

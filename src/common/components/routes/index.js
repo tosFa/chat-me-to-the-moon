@@ -26,8 +26,8 @@ export default (props) =>
     {props.routes.map(route => {
       const { component: Component, ...rest } = route;
 
-      return (route.auth) ? <MatchWhenAuthorized redirect={(route.auth || !isLoggedIn())} key={route.name} {...route} {...props} /> :
-        <Match key={route.name} {...rest} render={() => <Component {...rest} {...props} />} />
+      return (route.auth) ? <MatchWhenAuthorized key={route.name} {...route} {...props} /> :
+        <Match key={route.name} {...rest} render={(routeProps) => <Component {...rest} {...props} {...routeProps}/>} />
     })}
     <Miss component={Error}/>
   </Layout>

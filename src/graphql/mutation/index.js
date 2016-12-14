@@ -71,13 +71,10 @@ export default new GraphQLObjectType({
       resolve: (root, args) => {
         const options = { method: 'POST', body: JSON.stringify({ user: args }) };
 
-        return api('/api/users/', options).then(result => {
-          if (result.errors) {
-            return { errors: normalizeErrors(result) };
-          }
-          return result.user;
-        });
+        return api('/api/users/', options)
+          .then(result => result.errors ? { errors: normalizeErrors(result) } : result.user)
       }
+
     }
 
   }

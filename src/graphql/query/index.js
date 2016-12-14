@@ -1,5 +1,6 @@
-import { GraphQLObjectType, GraphQLInt } from 'graphql';
+import { GraphQLObjectType, GraphQLInt, GraphQLString } from 'graphql';
 import * as types from '../types';
+import { api, normalizeErrors } from '../helpers';
 import db from '../../db';
 
 export default new GraphQLObjectType({
@@ -32,6 +33,16 @@ export default new GraphQLObjectType({
         }
       },
       resolve: (root, args) => ({id: 1, email: ''})
+    },
+    confirmation: {
+      type: types.UserType,
+      args: {
+        confirmation_token: {
+          type: GraphQLString
+        }
+      },
+      resolve: (root, args) => api(`/users/confirmation?confirmation_token=${args.confirmation_token}`)
+        .then(result => result.errors ? { errors: normalizeErrors(result) } : result.user)
     }
   }
 });

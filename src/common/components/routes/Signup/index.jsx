@@ -12,11 +12,14 @@ export class Signup extends React.Component {
   }
 
   handleSubmit(values) {
-    const { signup } = this.props;
+    const { signup, router: { transitionTo } } = this.props;
 
-    signup(values).then((...args) => {
-      console.log({args, props: this.props});
-      alert('Signup success');
+    signup(values).then(({data: { signup, errors } }) => {
+      if (!errors) {
+        transitionTo(`/confirmation/${signup.confirmation_token}`);
+      }
+      //@todo handle backend errors
+
     })
 
   }
