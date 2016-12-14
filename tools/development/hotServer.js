@@ -83,7 +83,7 @@ class HotServer {
       }
     };
 
-    this.watcher = chokidar.watch([path.resolve(__dirname, '../../src/server')]);
+    this.watcher = chokidar.watch([path.resolve(__dirname, '../../src/server'), path.resolve(__dirname, '../../src/graphql')]);
     this.watcher.on('ready', () => {
       this.watcher
         .on('add', compileHotServer)

@@ -8,11 +8,9 @@ export default new GraphQLObjectType({
   description: "Subscription Type",
   fields: {
     messageAdded: {
-      type: new GraphQLList(types.MessageType),
+      type: types.MessageType,
       args: commentStructure,
-      resolve: (root, args) => {
-        return db.filter(item => item.conversationId === args.id);
-      }
+      resolve: object => object
     }
   }
 });

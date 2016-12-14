@@ -34,12 +34,9 @@ export class Signup extends React.Component {
 
 const withMutation = graphql(SIGNUP_MUTATION_QUERY, {
   props: ({ ownProps, mutate }) => ({
-    signup: ({ email, password, password_confirmation }) => {
-      return mutate({
-        variables: { email, password, password_confirmation },
-      })
-    }
-
+    signup: ({ email, password, password_confirmation }) => mutate({
+      variables: { email, password, password_confirmation },
+    })
   })
 });
 

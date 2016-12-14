@@ -24,7 +24,7 @@ export default [
     component: Signup
   },
   {
-    pattern: '/conversations',
+    pattern: '/conversations/:id',
     name: 'conversations',
     component: Conversation
 
