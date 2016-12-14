@@ -24,7 +24,7 @@ const links = [
   },
   {
     label: 'conversations',
-    url: '/conversations',
+    url: '/conversations/1',
     icon: <CommentIcon className={styles.icon}/>
   }
 ];

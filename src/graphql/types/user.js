@@ -14,6 +14,10 @@ export const fields = {
     type: GraphQLString,
     description: "auth token"
   },
+  confirmation_token: {
+    type: GraphQLString,
+    description: "confirmation token"
+  },
   errors: {
     type: new GraphQLList(ErrorType),
     description: "Validation errors"

@@ -15,10 +15,9 @@ export class Signup extends React.Component {
     const { signup } = this.props;
 
     signup(values).then((...args) => {
-      console.log({args});
+      console.log({args, props: this.props});
       alert('Signup success');
     })
-
 
   }
 

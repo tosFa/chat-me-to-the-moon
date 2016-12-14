@@ -11,6 +11,7 @@ export default (location, dispatch, routes) => {
     if (initActions.length) {
       return Promise.all(initActions.map(initAction => dispatch(initAction(params))))
         .then(results => ({ routes, results }))
+        .catch(error => console.log(error))
     }
   }
 

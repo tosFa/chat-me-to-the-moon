@@ -147,9 +147,11 @@ export class Conversation extends React.Component {
 
 
 const withData = graphql(CONVERSATION_DATA_QUERY, {
-  options: ({ params }) => ({
-    variables: { conversationId: params.id }
-  }),
+  options: ({ params }) => {
+    return {
+      variables: { conversationId: params.id }
+    };
+  },
   props: ({ data: { loading, subscribeToMore, conversation }, ownProps: { params: id } }) => {
     return {
       loading, subscribeToMore, conversationId: Number(id), conversation
