@@ -33,19 +33,17 @@ const links = [
 
 
 export const Navigation = ({ styles, signout }) => {
-  console.log(router);
+
   const logout = (event) => {
     event.preventDefault();
 
     signout().then(result => {
-
       if (result.data.signout.success) {
         window.location.href = '/';
       } else {
         console.log('fail');
       }
-    })
-
+    });
   }
   return (
     <nav styleName="nav">
