@@ -75,6 +75,40 @@ export default new GraphQLObjectType({
           .then(result => result.errors ? { errors: normalizeErrors(result) } : result.user)
       }
 
+    },
+
+    signin: {
+      type: types.UserType,
+      args: {
+        email: {
+          type: GraphQLString,
+          description: "email"
+        },
+        password: {
+          type: GraphQLString,
+          description: "password"
+        }
+      },
+      resolve: (root, args) => {
+        const options = { method: 'POST', body: JSON.stringify({ user: args }) };
+
+        return api('/users/sign_in', options)
+          .then(result => result.error ? { errors: [ { key: 'email', errors: [result.error] } ] } : result.user)
+        //@todo see if this API response will have to change
+      }
+
+    },
+
+    signout: {
+      type: types.BooleanType,
+      resolve: (root, args, context) => {
+        const options = { method: 'DELETE', body: JSON.stringify({ user: args }), headers: { Authorization: context.auth_token } };
+
+        return api('/api/sessions', options)
+          .then(result =>
+            result.errors ? { success: false, errors: [ {key: 'logout', errors: [result.errors] } ] } : { success: true }
+          )
+      }
     }
 
   }

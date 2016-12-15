@@ -4,17 +4,14 @@ import { MatchWithRoutes } from 'react-router-addons-routes';
 import Error from '../error/Error';
 import Layout from '../layout/Layout';
 import { omit } from '../../helpers/duckTools';
+import { isLoggedIn } from '../../helpers/auth';
 
-const isLoggedIn = () => {
 
-  return true;
-}
-
-const MatchWhenAuthorized = ({ component: Component, ...rest }) => {
+const MatchWhenAuthorized = ({ component: Component, cookies, ...rest }) => {
 
   return (
     <Match {...rest} render={props => (
-    isLoggedIn() ?
+    isLoggedIn(cookies) ?
       <Component {...props} {...rest} /> : <Redirect to={{pathname: '/', state: { from: props.location }}}/>
 
   )}/>

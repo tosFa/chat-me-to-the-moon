@@ -1,5 +1,6 @@
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import schema from '../schema';
+import envVars from '../../../tools/config/envVars';
 
 export const graphQlMiddleware = graphqlExpress((req) => {
   // Get the query, the same way express-graphql does it
@@ -9,6 +10,9 @@ export const graphQlMiddleware = graphqlExpress((req) => {
     // Probably indicates someone trying to send an overly expensive query
     throw new Error('Query too large.');
   }
+  const auth_token = (req.cookies && req.cookies[envVars.AUTH_COOKIE_NAME]) ?
+    req.cookies[envVars.AUTH_COOKIE_NAME] : '';
+
   //
   //let user;
   //if (req.user) {
@@ -31,7 +35,7 @@ export const graphQlMiddleware = graphqlExpress((req) => {
 
   return {
     schema,
-    context: {},
+    context: { auth_token },
   };
 })
 

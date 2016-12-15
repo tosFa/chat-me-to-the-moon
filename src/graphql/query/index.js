@@ -23,7 +23,9 @@ export default new GraphQLObjectType({
           type: GraphQLInt
         }
       },
-      resolve: (root, args) => ({ messages: db.filter(item => item.conversationId === args.id) })
+      resolve: (root, args) => {
+        return { messages: db.filter(item => item.conversationId === args.id) }
+      }
     },
     user: {
       type: types.UserType,
@@ -44,7 +46,7 @@ export default new GraphQLObjectType({
       resolve: (root, args) => api(`/users/confirmation?confirmation_token=${args.confirmation_token}`)
         .then(result => result.errors ? { errors: normalizeErrors(result) } : result.user)
     },
-    //signin,
+
     //signout
 
   }

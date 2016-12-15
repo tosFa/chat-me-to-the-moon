@@ -1,8 +1,7 @@
 import React from 'react';
+import { graphql } from 'react-apollo';
 import Form from '../../forms/Signup';
 import { SIGNUP_MUTATION_QUERY } from '../../../../client/graphql';
-import { graphql } from 'react-apollo';
-
 
 export class Signup extends React.Component {
   constructor(props) {
@@ -19,9 +18,7 @@ export class Signup extends React.Component {
         transitionTo(`/confirmation/${signup.confirmation_token}`);
       }
       //@todo handle backend errors
-
-    })
-
+    });
   }
 
   render() {

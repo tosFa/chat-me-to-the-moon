@@ -17,8 +17,7 @@ export default [
   {
     pattern: '/login',
     name: 'login',
-    component: Login,
-    auth: true
+    component: Login
   },
   {
     pattern: '/signup',
@@ -29,6 +28,7 @@ export default [
     pattern: '/conversations/:id',
     name: 'conversations',
     component: Conversation,
+    exactly: true,
     auth: true
   },
   {

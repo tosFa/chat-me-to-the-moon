@@ -13,6 +13,9 @@ import App from '../common/components/app';
 import client from '../common/apollo';
 import routes from '../common/components/routes/config';
 import ActionExecutor from '../common/components/hoc/action-executor';
+import createCookies from '../common/helpers/cookies';
+
+const cookies = createCookies();
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
@@ -34,7 +37,7 @@ function renderApp(TheApp) {
             {
               routerProps =>
                 <ActionExecutor {...routerProps} dispatch={store.dispatch} routes={routes}>
-                  <TheApp routes={routes} />
+                  <TheApp routes={routes} cookies={cookies}/>
                 </ActionExecutor>
             }
           </BrowserRouter>

@@ -17,6 +17,7 @@ import { graphQlMiddleware, graphiQlMiddleware } from '../graphql/mw'
 import bodyParser from 'body-parser';
 import upload from './middleware/multer';
 import startWebsocketServer from './ws';
+import cookieParser from 'cookie-parser';
 const appRootPath = appRoot.toString();
 
 // Create our express based server.
@@ -47,6 +48,8 @@ app.use(helmet.noSniff());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(cookieParser());
 
 app.use('/graphql', graphQlMiddleware);
 app.use('/graphiql', graphiQlMiddleware);

@@ -1,0 +1,1 @@
+export const isLoggedIn = (cookies) => !!cookies.get('chat-api-access_token');

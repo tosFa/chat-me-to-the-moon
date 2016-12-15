@@ -11,7 +11,7 @@ import App from '../common/components/app';
 import configureStore from '../common/redux/store/configureStore';
 import executor from '../common/helpers/routes/executor';
 import routes from '../common/components/routes/config';
-
+import createCookies from '../common/helpers/cookies';
 /**
  * An express middleware that is capabable of doing React server side rendering.
  */
@@ -27,21 +27,22 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
     return;
   }
 
+  const cookies = createCookies(request, response);
+
   // Create the redux store.
-  const store = configureStore();
+  const store = configureStore({}, cookies);
   // Set up a function we can call to render the app and return the result via
   // the response.
   const context = createServerRenderContext();
 
   const renderToDOM = () => {
 
-
     // Create the application react element.
     const app = (
       <ApolloProvider client={client} key="apollo">
         <Provider store={store} key="store">
           <ServerRouter location={request.url} context={context}>
-            <App store={store} routes={routes}/>
+            <App store={store} routes={routes} cookies={cookies}/>
           </ServerRouter>
         </Provider>
       </ApolloProvider>
@@ -81,7 +82,12 @@ function universalReactAppMiddleware(request: $Request, response: $Response) {
   const { dispatch, getState } = store;
 
   const renderApp = () => {
-    executor({ pathname: request.url }, dispatch, routes).then(() => renderToDOM())
+    executor({ pathname: request.url }, dispatch, routes)
+      .then(() => renderToDOM())
+      .catch(err => {
+        console.log(err);
+        return response.status(500).send(err.toString());
+      });
   }
   renderApp();
 }

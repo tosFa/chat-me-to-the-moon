@@ -1,4 +1,6 @@
 import React from 'react';
+import { graphql } from 'react-apollo';
+import { SIGNOUT_MUTATION_QUERY } from '../../../../client/graphql';
 import { Link } from 'react-router';
 import CSSModules from 'react-css-modules';
 import BlogIcon from 'react-icons/lib/fa/square-o';
@@ -30,18 +32,43 @@ const links = [
 ];
 
 
-export const Navigation = ({ styles }) =>
-  <nav styleName="nav">
-    <ul styleName="ul">
-      {links.map(
-        (item, index) =>
-          <li key={index} className={styles.li}>
-            {item.icon}
-            <Link to={item.url}>{item.label}</Link>
-          </li>
-      )}
-    </ul>
-  </nav>
+export const Navigation = ({ styles, signout }) => {
+  console.log(router);
+  const logout = (event) => {
+    event.preventDefault();
 
+    signout().then(result => {
 
-export default CSSModules(Navigation, styles);
+      if (result.data.signout.success) {
+        window.location.href = '/';
+      } else {
+        console.log('fail');
+      }
+    })
+
+  }
+  return (
+    <nav styleName="nav">
+      <ul styleName="ul">
+        {links.map(
+          (item, index) =>
+            <li key={index} className={styles.li}>
+              {item.icon}
+              <Link to={item.url}>{item.label}</Link>
+            </li>
+        )}
+        <li>
+          <a href="#" onClick={logout}>Logout</a>
+        </li>
+      </ul>
+    </nav>
+  );
+};
+
+const withMutation = graphql(SIGNOUT_MUTATION_QUERY, {
+  props: ({ mutate }) => ({
+    signout: () => mutate({ variables: {} })
+  })
+});
+
+export default withMutation(CSSModules(Navigation, styles));
