@@ -7,7 +7,7 @@ import CSSModules from 'react-css-modules';
 import DropZone from '../../elements/DropZone';
 import styles from './styles.css';
 import { upload } from '../../../redux/actions';
-import { CONVERSATION_DATA_QUERY, CONVERSATION_MUTATION_QUERY, CONVERSATION_SUBSCRIPTION_QUERY}
+import { CONVERSATION_DATA_QUERY, CONVERSATION_MUTATION_QUERY, CONVERSATION_SUBSCRIPTION_QUERY }
   from '../../../../client/graphql/conversations';
 import Container from '../../layout/Container';
 

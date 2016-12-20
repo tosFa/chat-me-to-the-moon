@@ -4,6 +4,7 @@ import Signup from '../routes/Signup';
 import Conversation from '../routes/Conversation';
 import Contact from '../routes/Contact';
 import Confirmation from '../routes/Confirmation';
+import Organizations from '../routes/Organizations';
 //import { testAsyncAction, testAsyncAction2 } from '../../redux/actions';
 
 export default [
@@ -40,5 +41,12 @@ export default [
     pattern: '/confirmation/:token',
     name: 'confirmation',
     component: Confirmation
+  },
+  {
+    pattern: '/organizations',
+    name: 'organizations',
+    component: Organizations,
+    exactly: true,
+    auth: true
   },
 ]

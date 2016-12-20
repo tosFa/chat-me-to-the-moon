@@ -1,6 +1,7 @@
-import { GraphQLObjectType, GraphQLInt, GraphQLString } from 'graphql';
+import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLList } from 'graphql';
+import qs from 'qs';
 import * as types from '../types';
-import { api, normalizeErrors } from '../helpers';
+import { normalizeResponse } from '../helpers';
 import db from '../../db';
 
 export default new GraphQLObjectType({
@@ -16,6 +17,7 @@ export default new GraphQLObjectType({
       },
       resolve: (root, args) => db.find(item => item.id === args.id)
     },
+
     conversation: {
       type: types.ConversationType,
       args: {
@@ -27,6 +29,7 @@ export default new GraphQLObjectType({
         return { messages: db.filter(item => item.conversationId === args.id) }
       }
     },
+
     user: {
       type: types.UserType,
       args: {
@@ -34,8 +37,10 @@ export default new GraphQLObjectType({
           type: GraphQLInt
         }
       },
-      resolve: (root, args) => ({id: 1, email: ''})
+      resolve: (root, args, context) => context.loaders.resourceLoader.load(`/users/${args.id}`)
+        .then(normalizeResponse)
     },
+
     confirmation: {
       type: types.UserType,
       args: {
@@ -43,11 +48,34 @@ export default new GraphQLObjectType({
           type: GraphQLString
         }
       },
-      resolve: (root, args) => api(`/users/confirmation?confirmation_token=${args.confirmation_token}`)
-        .then(result => result.errors ? { errors: normalizeErrors(result) } : result.user)
+      resolve: (root, args, context) =>
+        context.loaders.resourceLoader.load(`/users/confirmation?confirmation_token=${args.confirmation_token}`)
+        .then(normalizeResponse)
     },
 
-    //signout
+    organizations: {
+      type: new GraphQLList(types.OrganizationType),
+      args: {
+        page: {
+          type: GraphQLInt,
+          description: "page number"
+        },
+        per_page: {
+          type: GraphQLInt,
+          description: "page offset"
+        },
+        order: {
+          type: GraphQLString,
+          description: "sort order"
+        }
+      },
+      resolve: (root, args, context) => {
+        return context.loaders.resourceLoader.load(`/api/organizations/?${qs.stringify(args)}`)
+          .then(normalizeResponse)
+        
+      }
+
+    }
 
   }
 });

@@ -1,6 +1,7 @@
 import fetch  from 'isomorphic-fetch';
 const envVars = require('../../../tools/config/envVars');
 import { merge } from 'lodash';
+
 const headers = (extraHeaders) => ({
   'Content-Type': 'application/json',
   'Accept': 'application/json',

@@ -43,7 +43,7 @@ function render(reactAppElement, initialState) {
     ? renderToString(reactAppElement)
     : '';
 
-  const renderServerApp = (content) => {console.log({content});
+  const renderServerApp = (content) => {
     // If we had a reactAppElement then we need to run Helmet.rewind to extract
     // all the helmet information out of the helmet provider.
     // Note: you need to have called the renderToString on the react element before

@@ -93,7 +93,7 @@ export default new GraphQLObjectType({
         const options = { method: 'POST', body: JSON.stringify({ user: args }) };
 
         return api('/users/sign_in', options)
-          .then(result => result.error ? { errors: [ { key: 'email', errors: [result.error] } ] } : result.user)
+          .then(result => result.error ? { errors: [ { key: 'email', errors: [result.error] } ] } : result.data)
         //@todo see if this API response will have to change
       }
 

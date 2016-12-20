@@ -1,41 +1,30 @@
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import schema from '../schema';
 import envVars from '../../../tools/config/envVars';
+import DataLoader from 'dataloader';
+import { api } from '../helpers';
+
+const createLoaders = (options) => ({
+  resourceLoader: new DataLoader((urls) => Promise.all(urls.map((url) => api(url, options))))
+})
 
 export const graphQlMiddleware = graphqlExpress((req) => {
-  // Get the query, the same way express-graphql does it
   const query = req.query.query || req.body.query;
+
   if (query && query.length > 2000) {
-    // None of our app's queries are this long
-    // Probably indicates someone trying to send an overly expensive query
     throw new Error('Query too large.');
   }
   const auth_token = (req.cookies && req.cookies[envVars.AUTH_COOKIE_NAME]) ?
     req.cookies[envVars.AUTH_COOKIE_NAME] : '';
 
-  //
-  //let user;
-  //if (req.user) {
-  //  // We get req.user from passport-github with some pretty oddly named fields,
-  //  // let's convert that to the fields in our schema, which match the GitHub
-  //  // API field names.
-  //  user = {
-  //    login: req.user.username,
-  //    html_url: req.user.profileUrl,
-  //    avatar_url: req.user.photos[0].value,
-  //  };
-  //}
-  //
-  //// Initialize a new GitHub connector instance for every GraphQL request, so that API fetches
-  //// are deduplicated per-request only.
-  //const gitHubConnector = new GitHubConnector({
-  //  clientId: GITHUB_CLIENT_ID,
-  //  clientSecret: GITHUB_CLIENT_SECRET,
-  //});
+  const options = {
+    headers: { 'Authorization': auth_token }
+  };
+
 
   return {
     schema,
-    context: { auth_token },
+    context: { auth_token, loaders: createLoaders(options) }
   };
 })
 
