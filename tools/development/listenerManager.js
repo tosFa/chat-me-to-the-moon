@@ -1,12 +1,14 @@
-/* eslint-disable no-console */
-/* eslint-disable global-require */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/no-extraneous-dependencies */
+/* @flow */
 
-const createNotification = require('./createNotification');
+const { log } = require('../utils');
 
 class ListenerManager {
-  constructor(listener, name) {
+  name: string;
+  lastConnectionKey: number;
+  connectionMap: { [key: string|number]: Object };
+  listener: Object;
+
+  constructor(listener : Object, name : string) {
     this.name = name || 'listener';
     this.lastConnectionKey = 0;
     this.connectionMap = {};
@@ -14,8 +16,10 @@ class ListenerManager {
 
     // Track all connections to our server so that we can close them when needed.
     this.listener.on('connection', (connection) => {
+      // Increment the connection key.
+      this.lastConnectionKey += 1;
       // Generate a new key to represent the connection
-      const connectionKey = this.lastConnectionKey + 1;
+      const connectionKey = this.lastConnectionKey;
       // Add the connection to our map.
       this.connectionMap[connectionKey] = connection;
       // Remove the connection from our map when it closes.
@@ -36,23 +40,21 @@ class ListenerManager {
       if (this.listener) {
         this.killAllConnections();
 
-        createNotification({
+        log({
           title: this.name,
           level: 'info',
           message: 'Destroyed all existing connections.',
         });
 
         this.listener.close(() => {
-          this.killAllConnections();
-
-          createNotification({
+          log({
             title: this.name,
             level: 'info',
             message: 'Closed listener.',
           });
-        });
 
-        resolve();
+          resolve();
+        });
       } else {
         resolve();
       }
@@ -60,4 +62,4 @@ class ListenerManager {
   }
 }
 
-module.exports = ListenerManager;
+export default ListenerManager;

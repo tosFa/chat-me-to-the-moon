@@ -1,18 +1,23 @@
 {
-  "env": {
-    "test": {
-      "presets": [
-        ["es2015", {"modules": false}], "stage-0", "react"
-      ],
-      "plugins": [
-        "transform-es2015-modules-commonjs",
-        ["transform-es2015-template-literals", {
-          "loose": true,
-          "spec": true
-        }]
-      ]
-    }
-  }
+  //"env": {
+  //  "test": {
+  //    "presets": [
+  //      ["es2015", {"modules": false}], "stage-0", "react"
+  //    ],
+  //      "plugins": [
+  //      "transform-es2015-modules-commonjs",
+  //      ["transform-es2015-template-literals", {
+  //        "loose": true,
+  //        "spec": true
+  //      }]
+  //    ]
+  //  }
+  //}
+
+  "presets": [
+      ["env", { "targets": { "node": true } }],
+      "react"
+    ]
 }
 
 // babel testing setup is done here, for now, but I think it won't stay because nothing else is defined in .babelrc
