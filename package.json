@@ -97,6 +97,11 @@
     "subscriptions-transport-ws": "^0.3.0",
     "superagent": "2.3.0",
     "webfontloader": "^1.6.26",
+    "webpack": "2.1.0-beta.25",
+    "webpack-dev-middleware": "1.8.4",
+    "webpack-hot-middleware": "2.13.0",
+    "webpack-md5-hash": "0.0.5",
+    "webpack-node-externals": "1.5.4",
     "yarn": "0.16.1"
   },
   "devDependencies": {
@@ -145,11 +150,6 @@
     "regenerator-runtime": "0.9.5",
     "rimraf": "2.5.4",
     "style-loader": "0.13.1",
-    "url-loader": "0.5.7",
-    "webpack": "2.1.0-beta.25",
-    "webpack-dev-middleware": "1.8.4",
-    "webpack-hot-middleware": "2.13.0",
-    "webpack-md5-hash": "0.0.5",
-    "webpack-node-externals": "1.5.4"
+    "url-loader": "0.5.7"
   }
 }
