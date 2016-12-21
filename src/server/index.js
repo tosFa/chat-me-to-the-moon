@@ -4,47 +4,41 @@
 // This grants us source map support, which combined with our webpack source
 // maps will give us nice stack traces.
 import 'source-map-support/register';
-import path from 'path';
-import appRoot from 'app-root-path';
+import { resolve as pathResolve } from 'path';
+import appRootDir from 'app-root-dir';
 import express from 'express';
 import type { $Request, $Response, NextFunction } from 'express';
 import compression from 'compression';
-import hpp from 'hpp';
-import helmet from 'helmet';
-import universalMiddleware from './middleware/universalMiddleware';
 import { notEmpty } from '../common/utils/guards';
 import { graphQlMiddleware, graphiQlMiddleware } from '../graphql/mw'
 import bodyParser from 'body-parser';
 import upload from './middleware/multer';
 import startWebsocketServer from './ws';
 import cookieParser from 'cookie-parser';
-const appRootPath = appRoot.toString();
+
+
+
+
+import reactApplication from './middleware/reactApplication';
+import security from './middleware/security';
+import clientBundle from './middleware/clientBundle';
+//import serviceWorker from './middleware/serviceWorker';
+import errorHandlers from './middleware/errorHandlers';
+import { get } from '../../config';
+
+
+
+
+
+
+
 
 // Create our express based server.
 const app = express();
 
 // Don't expose any software information to hackers.
 app.disable('x-powered-by');
-
-// Prevent HTTP Parameter pollution.
-app.use(hpp());
-
-// Content Security Policy
-app.use(helmet.contentSecurityPolicy({
-  defaultSrc: ["'self'"],
-  scriptSrc: ["'self'"],
-  styleSrc: ["'self'"],
-  imgSrc: ["'self'"],
-  connectSrc: ["'self'", 'ws:'],
-  fontSrc: ["'self'"],
-  objectSrc: ["'none'"],
-  mediaSrc: ["'none'"],
-  frameSrc: ["'none'"],
-}));
-app.use(helmet.xssFilter());
-app.use(helmet.frameguard('deny'));
-app.use(helmet.ieNoOpen());
-app.use(helmet.noSniff());
+app.use(...security);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -68,23 +62,18 @@ app.use('/api/v1', (req, res, next) => {
 // Response compression.
 app.use(compression());
 
-// Configure static serving of our webpack bundled client files.
-app.use(
-  notEmpty(process.env.CLIENT_BUNDLE_HTTP_PATH),
-  express.static(
-    path.resolve(appRootPath, notEmpty(process.env.BUNDLE_OUTPUT_PATH), './client'),
-    { maxAge: notEmpty(process.env.CLIENT_BUNDLE_CACHE_MAXAGE) }
-  )
-);
+// Configure serving of our client bundle.
+app.use(get('bundles', 'client', 'webPath'), clientBundle);
 
 // Configure static serving of our "public" root http path static files.
-app.use(express.static(path.resolve(appRootPath, './public')));
+// Note: these will be served off the root (i.e. '/') of our application.
+app.use(express.static(pathResolve(appRootDir.get(), get('publicAssetsPath'))));
 
 // Configure upload file route
-app.use('/uploads', express.static(path.resolve(appRootPath, process.env.UPLOAD_DIR)));
+app.use('/uploads', express.static(pathResolve(appRootDir.get(), get('publicUploadPath'))));
 
 // The universal middleware for our React application.
-app.get('*', universalMiddleware);
+app.get('*', reactApplication);
 
 // Handle 404 errors.
 // Note: the react application middleware hands 404 paths, but it is good to
@@ -110,6 +99,8 @@ const port = parseInt(notEmpty(process.env.SERVER_PORT), 10);
 const listener = app.listen(port, () =>
   console.log(`Server listening on port ${port}`)
 );
+
+app.use(...errorHandlers);
 
 var { websocketServer, subscriptionServer } = startWebsocketServer();
 

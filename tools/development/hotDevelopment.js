@@ -30,7 +30,7 @@ const initializeBundle = (name, bundleConfig) => {
         target: name,
         mode: 'development',
       });
-      console.log({ webpackConfig });
+
       // Install the vendor DLL config for the client bundle if required.
       if (name === 'client' && usesDevVendorDLL(bundleConfig)) {
         // Install the vendor DLL plugin.

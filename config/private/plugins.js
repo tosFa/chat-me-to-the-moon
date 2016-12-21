@@ -52,7 +52,7 @@ export default {
           // NOTE: Make sure you use the same node version for development
           // and production.
           target === 'server'
-            ? ['env', { targets: { node: true }, modules: false }]
+            ? ['latest', { targets: { node: true }, modules: false }]
             : null,
         ].filter(x => x != null),
 

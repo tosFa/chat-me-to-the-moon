@@ -66,6 +66,8 @@ export default {
   // containing details of all output files for a bundle?
   bundleAssetsFileName: 'assets.json',
 
+  //CSS modules
+  useCSSModules: true,
   // Extended configuration for the Content Security Policy (CSP)
   // @see src/server/middleware/security for more info.
   cspExtensions: {
@@ -129,8 +131,8 @@ export default {
       // Src paths.
       srcPaths: [
         './src/client',
-        './src/shared',
-        './config/public',
+        './src/common',
+        './config',
       ],
 
       // Where does the client bundle output live?
@@ -177,9 +179,9 @@ export default {
       // Src paths.
       srcPaths: [
         './src/server',
-        './src/shared',
-        './config/private',
-        './config/public',
+        './src/common',
+        './src/graphql',
+        './config',
       ],
 
       // Where does the server bundle output live?

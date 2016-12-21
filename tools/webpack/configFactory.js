@@ -320,9 +320,20 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
             'style-loader',
             {
               path: 'css-loader',
-              // Include sourcemaps for dev experience++.
-              query: { sourceMap: true },
+              query: {
+                sourceMap: true,
+                modules: projConfig.useCSSModules,
+                localIdentName: "[name]-[local]",
+                minimize: false,
+                importLoaders: true
+              }
             },
+            {
+              path: 'postcss-loader',
+              query: {
+                config: `./tools/config`
+              }
+            }
           ],
         }),
       ),
@@ -506,13 +517,38 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
             ifProdClient(() => ({
               loader: ExtractTextPlugin.extract({
                 fallbackLoader: 'style-loader',
-                loader: ['css-loader'],
+                loader:
+                  [
+                    {
+                      loader: "css-loader",
+                      query:
+                      {
+                        sourceMap: true,
+                        modules: projConfig.useCSSModules,
+                        localIdentName: "[local]-[hash:base62:8]",
+                        minimize: false,
+                        importLoaders: true
+                      }
+                    }
+                  ]
               }),
             })),
             // When targetting the server we use the "/locals" version of the
             // css loader, as we don't need any css files for the server.
             ifNode({
-              loaders: ['css-loader/locals'],
+              loaders: [
+                {
+                  loader: 'css-loader/locals',
+                  query:
+                  {
+                    sourceMap: false,
+                    modules: projConfig.useCSSModules,
+                    localIdentName: ifProdClient("[local]-[hash:base62:8]", "[name]-[local]"),
+                    minimize: false,
+                    importLoaders: true
+                  }
+                }
+              ],
             }),
           ),
         ),
