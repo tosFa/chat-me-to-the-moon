@@ -2,7 +2,7 @@ import superagent from 'superagent';
 import qs from 'qs';
 import log from '../logger';
 import { forEach, pickBy } from 'lodash';
-//import pb from 'helpers/progressbar';
+import apiConfig from '../../../../config/private/api';
 
 const rlist = {};
 
@@ -26,7 +26,7 @@ const formatUrl = (url) => {
   //  return `http://${config.API_HOST}:${config.API_PORT}${url}`;
   //}
 
-  return `http://${process.env.API_SERVER}:${process.env.API_PORT}/${process.env.API_PREFIX}/${process.env.API_VERSION}${url}`;
+  return `${apiConfig.apiProtocol}://${apiConfig.apiHost}:1337/${apiConfig.apiPrefix}/${apiConfig.apiVersion}${url}`;
 };
 
 export default (defaultHeaders, method) => {
@@ -107,7 +107,7 @@ export default (defaultHeaders, method) => {
 
       request
         .on('abort', onResponse.bind(null, { status: null, error: 'aborted' }))
-        .timeout(Number(process.env.API_REQUSET_TIMEOUT))
+        .timeout(Number(apiConfig.apiRequestTimeout))
         .then(onResponse, onResponse);
     });
   };

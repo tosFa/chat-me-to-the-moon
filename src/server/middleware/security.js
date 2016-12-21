@@ -31,9 +31,10 @@ const cspConfig = {
     ],
     imgSrc: [
       "'self'",
+      'blob:',
       // If you use Base64 encoded images (i.e. inlined images), then you will
       // need the following:
-      // 'data:',
+       'data:',
     ],
     // Note: Setting this to stricter than * breaks the service worker. :(
     // I can't figure out how to get around this, so if you know of a safer

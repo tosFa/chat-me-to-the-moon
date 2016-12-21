@@ -91,4 +91,21 @@ export default {
   ssrEnabled: getBoolVar('SSR_ENABLED', true),
   // The port on which the client bundle development server should run.
   clientDevServerPort: getIntEnvVar('CLIENT_DEVSERVER_PORT', 7331),
+  // Websockets graphQL port
+  websocketGrapQLPort: getIntEnvVar('WS_PORT', 9000),
+
+  // API configuration
+  apiHost: getStringEnvVar('API_SERVER', 'localhost'),
+  apiPort: getIntEnvVar('API_PORT', 3000),
+  apiPrefix: getStringEnvVar('API_PREFIX', 'api'),
+  apiVersion: getStringEnvVar('API_VERSION', 'v1'),
+  apiProtocol: getStringEnvVar('API_PROTOCOL', 'http'),
+  apiRequestTimeout: getIntEnvVar('API_REQUEST_TIMEOUT', 5000),
+
+  //AUTH TOKEN
+  authCookieName: getStringEnvVar('AUTH_COOKIE_NAME', 'chat-api-access_token'),
+
+  //UPLOAD DIR
+  uploadDir: getStringEnvVar('UPLOAD_DIR', './uploads'),
+
 };

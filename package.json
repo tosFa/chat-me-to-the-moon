@@ -7,11 +7,12 @@
     "node": "7.2.1"
   },
   "scripts": {
-    "clean": "rimraf build",
+    "clean": "babel-node tools/scripts/clean",
     "development": "babel-node tools/development",
-    "build": "npm run clean && webpack --config ./tools/webpack/client.config.js && webpack --config ./tools/webpack/universalMiddleware.config.js && webpack --config ./tools/webpack/server.config.js",
+    "build": "babel-node tools/scripts/build",
+    "analyze": "babel-node tools/scripts/analyze",
     "start": "node build/server",
-    "deploy": "node tools/scripts/deploy",
+    "deploy": "babel-node tools/scripts/deploy",
     "lint": "eslint src",
     "typecheck": "flow",
     "typereport": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text",

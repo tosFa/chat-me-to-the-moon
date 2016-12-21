@@ -2,6 +2,10 @@ import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { createSubscriptionManager } from '../../graphql/subscription';
 import schema from '../../graphql/schema';
+import environmentConfig from '../../../config/private/environment';
+
+const port = environmentConfig.websocketGrapQLPort;
+const host = environmentConfig.host;
 
 export default () => {
   // WebSocket server for subscriptions
@@ -10,8 +14,8 @@ export default () => {
     response.end();
   });
 
-  websocketServer.listen(process.env.WS_PORT, () => console.log( // eslint-disable-line no-console
-    `Websocket Server is now running on http://localhost:${process.env.WS_PORT}`
+  websocketServer.listen(environmentConfig.websocketGrapQLPort, () => console.log( // eslint-disable-line no-console
+    `Websocket Server is now running on http://${host}:${port}`
   ));
 
   var subscriptionManager = createSubscriptionManager(schema);

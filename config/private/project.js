@@ -39,7 +39,7 @@ export default {
   includeSourceMapsForProductionBuilds: false,
 
   // Path to the shared src between the bundles.
-  bundlesSharedSrcPath: './src/shared',
+  bundlesSharedSrcPath: './src/common',
 
   // These extensions are tried when resolving src files for our bundles..
   bundleSrcTypes: ['js', 'jsx', 'json'],

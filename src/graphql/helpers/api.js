@@ -1,5 +1,5 @@
 import fetch  from 'isomorphic-fetch';
-const envVars = require('../../../tools/config/envVars');
+import environmentConfig from '../../../config/private/environment';
 import { merge } from 'lodash';
 
 const headers = (extraHeaders) => ({
@@ -9,7 +9,7 @@ const headers = (extraHeaders) => ({
 });
 
 export default (relativeUrl, options = {}) => {
-  const baseUrl = `${envVars.API_PROTOCOL}://${envVars.API_SERVER}:${envVars.API_PORT}`;
+  const baseUrl = `${environmentConfig.apiProtocol}://${environmentConfig.apiHost}:${environmentConfig.apiPort}`;
 
   options = merge({}, { headers: headers(), method: 'GET'}, options);
 

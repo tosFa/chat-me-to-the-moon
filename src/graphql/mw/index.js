@@ -1,6 +1,6 @@
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import schema from '../schema';
-import envVars from '../../../tools/config/envVars';
+import environmentConfig from '../../../config/private/environment';
 import DataLoader from 'dataloader';
 import { api } from '../helpers';
 
@@ -14,8 +14,8 @@ export const graphQlMiddleware = graphqlExpress((req) => {
   if (query && query.length > 2000) {
     throw new Error('Query too large.');
   }
-  const auth_token = (req.cookies && req.cookies[envVars.AUTH_COOKIE_NAME]) ?
-    req.cookies[envVars.AUTH_COOKIE_NAME] : '';
+  const auth_token = (req.cookies && req.cookies[environmentConfig.authCookieName]) ?
+    req.cookies[environmentConfig.authCookieName] : '';
 
   const options = {
     headers: { 'Authorization': auth_token }

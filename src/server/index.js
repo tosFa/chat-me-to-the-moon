@@ -15,22 +15,13 @@ import bodyParser from 'body-parser';
 import upload from './middleware/multer';
 import startWebsocketServer from './ws';
 import cookieParser from 'cookie-parser';
-
-
-
-
+import environmentConfig from '../../config/private/environment';
 import reactApplication from './middleware/reactApplication';
 import security from './middleware/security';
 import clientBundle from './middleware/clientBundle';
 //import serviceWorker from './middleware/serviceWorker';
 import errorHandlers from './middleware/errorHandlers';
 import { get } from '../../config';
-
-
-
-
-
-
 
 
 // Create our express based server.
@@ -95,7 +86,7 @@ app.use((err: ?Error, req: $Request, res: $Response, next: NextFunction) => { //
 });
 
 // Create an http listener for our express app.
-const port = parseInt(notEmpty(process.env.SERVER_PORT), 10);
+const port = environmentConfig.port;
 const listener = app.listen(port, () =>
   console.log(`Server listening on port ${port}`)
 );
