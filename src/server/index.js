@@ -29,7 +29,7 @@ const app = express();
 
 // Don't expose any software information to hackers.
 app.disable('x-powered-by');
-app.use(...security);
+//app.use(...security);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

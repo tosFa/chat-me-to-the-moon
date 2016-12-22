@@ -4,6 +4,7 @@ import * as types from '../types';
 import { normalizeResponse } from '../helpers';
 import db from '../../db';
 
+
 export default new GraphQLObjectType({
   name: 'query',
   description: "Query Type",
@@ -54,7 +55,7 @@ export default new GraphQLObjectType({
     },
 
     organizations: {
-      type: new GraphQLList(types.OrganizationType),
+      type: types.OrganizationsType,
       args: {
         page: {
           type: GraphQLInt,
@@ -74,8 +75,25 @@ export default new GraphQLObjectType({
           .then(normalizeResponse)
         
       }
+    },
+
+    organization: {
+      type: types.OrganizationType,
+      args: {
+        id: {
+          type: GraphQLInt,
+          description: "Organization id"
+        }
+      },
+      resolve: (root, args, context) => {
+        return context.loaders.resourceLoader.load(`/api/organizations/?${args.id}`)
+          .then(normalizeResponse)
+
+      }
 
     }
+
+
 
   }
 });

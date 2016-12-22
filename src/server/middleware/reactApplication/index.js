@@ -26,10 +26,13 @@ import client from '../../../common/apollo';
 function reactApplicationMiddleware(request: $Request, response: $Response) {
   // We should have had a nonce provided to us.  See the server/index.js for
   // more information on what this is.
-  if (typeof response.locals.nonce !== 'string') {
-    throw new Error('A "nonce" value has not been attached to the response');
-  }
-  const nonce = response.locals.nonce;
+  //if (typeof response.locals.nonce !== 'string') {
+  //  throw new Error('A "nonce" value has not been attached to the response');
+  //}
+  //const nonce = response.locals.nonce;
+  const nonce = 'locals';
+
+  //@todo try to see what's going on with this one
 
   // It's possible to disable SSR, which can be useful in development mode.
   // In this case traditional client side only rendering will occur.

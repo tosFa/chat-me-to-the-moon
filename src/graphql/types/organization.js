@@ -2,6 +2,7 @@ import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNu
 import ErrorType from "./error";
 import UserType from "./user";
 import { api, normalizeErrors } from '../helpers';
+import typeFactory from '../types/factory';
 
 export const fields = {
   id: {
@@ -25,11 +26,8 @@ export const fields = {
   resource: {
     type: GraphQLString,
     description: "resource url"
-  },
-  errors: {
-    type: new GraphQLList(ErrorType),
-    description: "Validation errors"
-  },
+  }
+
 };
 
 export const args = {
@@ -46,8 +44,19 @@ export const args = {
     description: "sort order"
   }
 };
-export default new GraphQLObjectType({
+
+export const OrganizationType = typeFactory.remoteSingleFactory({
   name: "organization",
-  description: "Organization Type",
+  description: "Organization Model Type",
   fields
 });
+export const OrganizationsType = typeFactory.remoteListFactory({
+  name: "organizations",
+  description: "Organization List Type",
+  fields
+});
+//export default new GraphQLObjectType({
+//  name: "organization",
+//  description: "Organization Type",
+//  fields
+//});

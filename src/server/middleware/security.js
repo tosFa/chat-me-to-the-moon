@@ -15,6 +15,8 @@ const cspConfig = {
       "'self'",
       // Allow scripts from cdn.polyfill.io so that we can import the polyfill.
       'cdn.polyfill.io',
+      'cdn.jsdelivr.net',
+
       // Note: We will execution of any inline scripts that have the following
       // nonce identifier attached to them.
       // This is useful for guarding your application whilst allowing an inline
@@ -28,6 +30,7 @@ const cspConfig = {
       // Webpack generates JS that loads our CSS, so this is needed:
       "'unsafe-inline'",
       'blob:',
+      'cdn.jsdelivr.net',
     ],
     imgSrc: [
       "'self'",
