@@ -55,7 +55,7 @@ export const Navigation = ({ styles, signout }) => {
               <Link to={item.url}>{item.label}</Link>
             </li>
         )}
-        <li>
+        <li className={styles.li}>
           <a href="#" onClick={logout}>Logout</a>
         </li>
       </ul>
