@@ -96,7 +96,8 @@ export class Table extends React.Component {
   renderPagination() {
     const {
       hasPagination, includeLastOnBigLists,
-      pagination: { current_page, total_pages, prev_page, next_page }
+      pagination: { current_page, total_pages, prev_page, next_page },
+      prev, next
     } = this.props;
     const basicStyle = {display: 'inline-block', margin: '10px', padding: '4px 8px', border: '1px solid #eee'};
     const includeThreeDots = includeLastOnBigLists && current_page < total_pages;
@@ -107,7 +108,7 @@ export class Table extends React.Component {
 
     return (
       <ul style={{listStyleType: 'none'}}>
-        {(prev_page) ? <li style={basicStyle}>prev</li> : null}
+        {(prev_page) ? <li style={basicStyle}>{prev}</li> : null}
 
         {this.getPageNumbers().map((item, key) =>
           <li style={{ ...basicStyle, color: (item == current_page ? 'red' : 'blue') }} key={key}>{item}</li>
@@ -115,7 +116,7 @@ export class Table extends React.Component {
 
         {(includeThreeDots) ? <li style={basicStyle}>...</li> : null}
         {(includeThreeDots) ? <li style={basicStyle}>{total_pages}</li> : null}
-        {(next_page) ? <li style={basicStyle}>next</li> : null}
+        {(next_page) ? <li style={basicStyle}>{next}</li> : null}
       </ul>
     );
   }
@@ -153,5 +154,7 @@ Table.defaultProps = {
   pagination: {},
   includeLastOnBigLists: true,
   loading: false,
-  nodesMap: {}
+  nodesMap: {},
+  prev: '<',
+  next: '>'
 };
