@@ -6,12 +6,12 @@ import MetaType from "../meta/index";
 export default {
   remoteSingleFactory: ({ name, description, fields }) => {
     const data = {
-      type: new GraphQLList(new GraphQLObjectType({fields, name: `${name}Model`, description})),
-      description: `Data/List/${name}`
+      type: new GraphQLObjectType({fields, name: `${name}Model`, description}),
+      description: `Data/Single/${name}`
     };
     const errors = {
       type: new GraphQLList(ErrorType),
-      description: `Errors/List/${name}`
+      description: `Errors/Single/${name}`
     };
 
     return new GraphQLObjectType({

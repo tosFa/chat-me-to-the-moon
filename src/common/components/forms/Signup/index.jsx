@@ -1,6 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { TextInput } from '../../elements/FormElements'
+// import { EMAIL_REGEX } from '../../../../common/helpers/validation';
 
 export const validate = values => {
   let errors = {};

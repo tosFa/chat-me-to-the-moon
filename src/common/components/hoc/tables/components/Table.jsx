@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import qs from 'qs';
 import { actions } from '../redux';
 import TableRow from './TableRow';
 import TableData from './TableData';
@@ -25,6 +27,7 @@ export class Table extends React.Component {
     this.renderFooter = ::this.renderFooter;
     this.renderPagination = ::this.renderPagination;
     this.getPageNumbers = ::this.getPageNumbers;
+    this.getPaginatedLink = ::this.getPaginatedLink;
 
     this.setNodes(props);
     //this.props.register();
@@ -93,6 +96,13 @@ export class Table extends React.Component {
 
     return paginationArray.sort();
   }
+
+  getPaginatedLink(page) {
+    const args = { ...qs.parse(window.location.search.slice(1)), page};
+
+    return `${window.location.pathname}?${qs.stringify(args)}`;
+  }
+
   renderPagination() {
     const {
       hasPagination, includeLastOnBigLists,
@@ -108,15 +118,17 @@ export class Table extends React.Component {
 
     return (
       <ul style={{listStyleType: 'none'}}>
-        {(prev_page) ? <li style={basicStyle}>{prev}</li> : null}
+        {(prev_page) ? <li style={basicStyle}><Link to={this.getPaginatedLink(prev_page)}>{prev}</Link></li> : null}
 
         {this.getPageNumbers().map((item, key) =>
-          <li style={{ ...basicStyle, color: (item == current_page ? 'red' : 'blue') }} key={key}>{item}</li>
+          <li style={{ ...basicStyle, color: (item == current_page ? 'red' : 'blue') }} key={key}>
+            <Link to={this.getPaginatedLink(item)}>{item}</Link>
+          </li>
         )}
 
         {(includeThreeDots) ? <li style={basicStyle}>...</li> : null}
-        {(includeThreeDots) ? <li style={basicStyle}>{total_pages}</li> : null}
-        {(next_page) ? <li style={basicStyle}>{next}</li> : null}
+        {(includeThreeDots) ? <li style={basicStyle}><Link to={this.getPaginatedLink(total_pages)}>{total_pages}</Link></li> : null}
+        {(next_page) ? <li style={basicStyle}><Link to={this.getPaginatedLink(next_page)}>{next}</Link></li> : null}
       </ul>
     );
   }

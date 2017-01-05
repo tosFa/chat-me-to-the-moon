@@ -133,6 +133,7 @@ export default {
         './src/client',
         './src/common',
         './config',
+        './node_modules/@blueprintjs/core/dist/'
       ],
 
       // Where does the client bundle output live?
@@ -182,6 +183,7 @@ export default {
         './src/common',
         './src/graphql',
         './config',
+        './node_modules/@blueprintjs/core/dist/'
       ],
 
       // Where does the server bundle output live?

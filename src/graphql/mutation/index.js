@@ -1,6 +1,5 @@
 import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLInputObjectType, GraphQLList } from 'graphql';
 import * as types from '../types';
-import { fields as userFields } from '../types/user';
 import db from '../../db';
 import { pubsub } from '../subscription/pubsub';
 import { api, normalizeErrors } from '../helpers';
@@ -108,6 +107,39 @@ export default new GraphQLObjectType({
           .then(result =>
             result.errors ? { success: false, errors: [ {key: 'logout', errors: [result.errors] } ] } : { success: true }
           )
+      }
+    },
+
+
+    organization: {
+      type: types.OrganizationType,
+      args: {
+        id: {
+          type: GraphQLInt,
+          description: "Id"
+        },
+        name: {
+          type: GraphQLString,
+          description: "name"
+        },
+        contact_email: {
+          type: GraphQLString,
+          description: "contact email"
+        },
+      },
+      resolve: (root, args, context) => {
+        console.log({args});
+        const options = {
+          method: args.id ? 'PUT' : 'POST',
+          body: JSON.stringify({ data: args }),
+          headers: { Authorization: context.auth_token }
+        };
+
+        return api('/api/organizations/', options)
+          .then(result => {
+            console.log({result});
+            return result.errors ? { errors: normalizeErrors(result) } : result;
+          })
       }
     }
 

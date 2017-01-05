@@ -5,6 +5,8 @@ import Conversation from '../routes/Conversation';
 import Contact from '../routes/Contact';
 import Confirmation from '../routes/Confirmation';
 import Organizations from '../routes/Organizations';
+import NewOrganization from '../routes/Organizations/new';
+import ViewOrganization from '../routes/Organizations/view';
 //import { testAsyncAction, testAsyncAction2 } from '../../redux/actions';
 
 export default [
@@ -46,6 +48,20 @@ export default [
     pattern: '/organizations',
     name: 'organizations',
     component: Organizations,
+    exactly: true,
+    auth: true
+  },
+  {
+    pattern: '/organizations/new',
+    name: 'organizations-new',
+    component: NewOrganization,
+    exactly: true,
+    auth: true
+  },
+  {
+    pattern: '/organizations/:id',
+    name: 'organizations-view',
+    component: ViewOrganization,
     exactly: true,
     auth: true
   },

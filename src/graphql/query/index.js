@@ -86,7 +86,8 @@ export default new GraphQLObjectType({
         }
       },
       resolve: (root, args, context) => {
-        return context.loaders.resourceLoader.load(`/api/organizations/?${args.id}`)
+        console.log('context.loaders: ', args);
+        return context.loaders.resourceLoader.load(`/api/organizations/${args.id}`)
           .then(normalizeResponse)
 
       }

@@ -27,3 +27,39 @@ export const ORGANIZATIONS_DATA_QUERY = gql`
     }
   }
 `;
+
+export const ORGANIZATION_DATA_QUERY = gql`
+  query Organization($id: Int!) {
+    organization(id: $id) {
+      data {
+      	id
+      	name
+      	contact_email
+				user {
+					id
+					email
+				}
+			}
+			errors{
+				key
+				errors
+			}
+    }
+  }
+`;
+
+
+
+export const ORGANIZATIONS_MUTATION_QUERY = gql`
+  mutation Organization($id: Int, $name: String!, $contact_email: String!) {
+    organization(id: $id, name: $name, contact_email: $contact_email) {
+    	data {
+    		id
+    	}
+    	errors {
+    		key
+    		errors
+    	}
+    }
+  }
+`;
