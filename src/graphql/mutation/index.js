@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLInputObjectType, GraphQLList } from 'graphql';
+import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLInputObjectType, GraphQLList, GraphQLNonNull } from 'graphql';
 import * as types from '../types';
 import db from '../../db';
 import { pubsub } from '../subscription/pubsub';
@@ -55,23 +55,23 @@ export default new GraphQLObjectType({
       type: types.UserType,
       args: {
         email: {
-          type: GraphQLString,
+          type: new GraphQLNonNull(GraphQLString),
           description: "email"
         },
         password: {
-          type: GraphQLString,
+          type: new GraphQLNonNull(GraphQLString),
           description: "password"
         },
         password_confirmation: {
-          type: GraphQLString,
+          type: new GraphQLNonNull(GraphQLString),
           description: "password_confirmation"
         }
       },
-      resolve: (root, args) => {
+      resolve: (root, args, context) => {
         const options = { method: 'POST', body: JSON.stringify({ user: args }) };
 
-        return api('/api/users/', options)
-          .then(result => result.errors ? { errors: normalizeErrors(result) } : result.user)
+        return api('/api/users/', options);
+
       }
 
     },
