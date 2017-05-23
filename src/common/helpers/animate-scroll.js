@@ -1,4 +1,4 @@
-/** AUTO1
+/** 
  * Smooth scrolling implementation.
  */
 
